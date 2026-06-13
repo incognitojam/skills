@@ -1,0 +1,14 @@
+{
+	"amp.mcpServers": {
+		"timeline-remote": {
+			"url": "${AMP_TIMELINE_REMOTE_MCP_URL}"
+		}
+	},
+	"amp.gauge": "tokens",
+	"amp.keymap": {
+		"mode.use.deep": "<leader> d",
+		"mode.use.rush": "<leader> r",
+		"thread.mention": "<leader> t",
+		"prompt.clear": "<leader> c"
+	}
+}

@@ -32,3 +32,4 @@ link_path() {
 
 link_path "$repo_root/.config/AGENTS.md" "$HOME/.config/AGENTS.md"
 link_path "$repo_root/.config/amp/plugins" "$HOME/.config/amp/plugins"
+link_path "$repo_root/.config/amp/settings.json" "$HOME/.config/amp/settings.json"
