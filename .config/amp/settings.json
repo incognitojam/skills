@@ -2,6 +2,14 @@
 	"amp.mcpServers": {
 		"timeline-remote": {
 			"url": "${AMP_TIMELINE_REMOTE_MCP_URL}"
+		},
+		"workers-observability": {
+			"command": "bunx",
+			"args": [
+				"-y",
+				"mcp-remote",
+				"https://observability.mcp.cloudflare.com/mcp"
+			]
 		}
 	},
 	"amp.gauge": "tokens",
