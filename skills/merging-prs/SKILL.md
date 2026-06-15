@@ -50,6 +50,23 @@ over these defaults.
    - Clean up local branches or stale state after the merge, CI, deploy, and verification
      status are clear.
 
+## Multi-worktree safety
+
+- In repositories that use sibling worktrees, do not run `gh pr merge ... --delete-branch`
+  from a feature/dispatched worktree. GitHub may merge the PR remotely and then fail while
+  trying to check out the base branch or delete local branches, for example when `main` is
+  already checked out in another worktree.
+- Prefer a worktree-safe merge: run `gh pr merge <pr> --squash` or the repository's chosen
+  strategy without `--delete-branch` so the CLI does not perform local checkout/branch
+  cleanup. Remote source branch deletion is fine: let GitHub's automatic PR branch cleanup
+  handle it, or delete the remote branch separately after verifying the merge if needed.
+- Treat feature worktree removal and local branch deletion as separate lifecycle cleanup,
+  ideally coordinated by the dispatcher/orchestrator once the PR is merged or closed. If
+  doing it manually, remove the feature worktree before deleting its local branch. Refresh
+  or update the base branch only from the worktree that already has that branch checked out.
+- If a merge command exits after a local cleanup failure, verify the PR's merged state and
+  resulting base-branch commit before retrying. Do not re-run the merge blindly.
+
 ## Failure handling
 
 - If pre-merge checks are red, stop before merging and summarize the blocker.
