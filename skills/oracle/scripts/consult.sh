@@ -6,7 +6,7 @@ usage() {
 Usage: consult.sh [--cwd DIR] [--timeout SECONDS] [--output FILE] [--log FILE]
 
 Read the consultation request from stdin. Print Oracle's report to stdout unless
---output is provided. Claude diagnostics go to --log when provided.
+--output is provided. Diagnostics go to --log when provided.
 EOF
 }
 
