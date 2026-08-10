@@ -1,0 +1,4 @@
+interface:
+  display_name: "Oracle"
+  short_description: "Consult a read-only oracle for a second opinion"
+  default_prompt: "Use $oracle to get a read-only senior-engineer opinion on this problem."

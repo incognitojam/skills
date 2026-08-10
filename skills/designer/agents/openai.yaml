@@ -1,0 +1,4 @@
+interface:
+  display_name: "Designer"
+  short_description: "Design and implement distinctive frontend UI"
+  default_prompt: "Use $designer to design and implement this frontend experience."
