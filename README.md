@@ -5,9 +5,16 @@ Personal agent skills shared across Claude Code and Codex. Run `./link.sh` to sy
 - All `skills/<name>/` directories are linked into `~/.claude/skills/`.
 - `oracle` and `designer` are additionally linked into `~/.agents/skills/` for Codex.
 
-Retired guidance lives in `drafts/`; nothing there is linked or loaded.
+Personal cross-repository instructions are tracked separately in
+[`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
 
-Repository-specific conventions belong in that repository's `CLAUDE.md` or `AGENTS.md`.
+```sh
+./link.sh --global-instructions
+```
+
+This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing
+files and unrelated symlinks at either location are reported and left unchanged, so
+the default `./link.sh` remains portable for people with their own global instructions.
 
 ## Skills
 

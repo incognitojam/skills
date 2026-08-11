@@ -1,4 +1,4 @@
-Skill source files live in `skills/<skill-name>/SKILL.md`; `./link.sh` symlinks each skill dir into `~/.claude/skills/`, plus Codex-facing skills into `~/.agents/skills/`, so edits take effect immediately — no install step.
+Skill source files live in `skills/<skill-name>/SKILL.md`; personal cross-repository instructions live in `global/AGENTS.md`. `./link.sh` symlinks each skill dir into `~/.claude/skills/`, plus Codex-facing skills into `~/.agents/skills/`. Passing `--global-instructions` additionally links the shared instructions for Claude Code and Codex without replacing existing user files.
 
 When creating or modifying a skill, load any relevant skills first. Keep skill instructions practical, concise, and reusable across repos: anything repo-specific belongs in that repo's CLAUDE.md/AGENTS.md instead. Prefer minimal `SKILL.md` frontmatter with `name` and `description`, and make descriptions trigger-oriented so agents know when to use the skill.
 
