@@ -1,5 +1,19 @@
 # Personal agent instructions
 
+## Personal data
+
+- Do not introduce private personal data into anything that lands in a repository or
+  is shared externally: code, tests, fixtures, screenshots, recordings, logs, and
+  commit messages. Invent synthetic values rather than reaching for a real name,
+  email address, phone number, physical address, credential, or internal hostname.
+- This is a rule about not creating new exposure, not a redaction chore. Data that is
+  already public in the context being worked in — authors and emails in git history,
+  participants on a public pull request or issue, an open-source codebase — needs no
+  masking. Quote and reproduce it normally.
+- When capturing a screenshot or recording, prefer a view backed by public or
+  synthetic data. Only if the sole usable view exposes genuinely private data,
+  redact it or say what could not be captured.
+
 ## GitHub communication
 
 - Treat GitHub issues, pull requests, comments, reviews, and review-thread state as
