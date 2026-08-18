@@ -16,6 +16,10 @@
 
 ## GitHub communication
 
+- When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
+  arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
+  according to user preferences. When writing Markdown files, follow the existing
+  convention in that file or codebase.
 - Treat GitHub issues, pull requests, comments, reviews, and review-thread state as
   external communication. Do not create, edit, close, or reopen an issue or pull
   request; post, edit, or delete a comment; submit a review; or resolve a review
