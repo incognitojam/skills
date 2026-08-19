@@ -1,20 +1,33 @@
 # Skills
 
-Personal agent skills shared across Claude Code and Codex. Run `./link.sh` to symlink them into place:
+Personal agent skills shared across Claude Code and Codex. Install them with the script for your platform:
+
+```sh
+# macOS and Linux
+./link.sh
+```
+
+```powershell
+# Windows
+.\link.ps1
+```
+
+The scripts link them into place as follows:
 
 - All `skills/<name>/` directories are linked into `~/.claude/skills/`.
 - `oracle` and `designer` are additionally linked into `~/.agents/skills/` for Codex.
 
-Personal cross-repository instructions are tracked separately in
-[`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
+Personal cross-repository instructions are tracked separately in [`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
 
 ```sh
 ./link.sh --global-instructions
 ```
 
-This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing
-files and unrelated symlinks at either location are reported and left unchanged, so
-the default `./link.sh` remains portable for people with their own global instructions.
+```powershell
+.\link.ps1 -GlobalInstructions
+```
+
+This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing files and unrelated links at either location are reported and left unchanged, so the default installers remain portable for people with their own global instructions. On Windows, skill directories use junctions; global instruction files use symbolic links with a hard-link fallback.
 
 ## Skills
 
