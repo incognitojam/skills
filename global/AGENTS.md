@@ -26,6 +26,15 @@
   thread unless the user explicitly asks for that action. A GitHub link, a request to
   investigate or address feedback, or prior authorship of a pull request is not
   permission to write on GitHub or resolve a thread.
+- Merge a pull request only when the user explicitly asks and the target is
+  unambiguous. Respect repository merge policy and stop for failed required checks,
+  unresolved requested changes, conflicts, or other merge blockers unless the user
+  explicitly accepts the risk.
+- After attempting a merge, verify the pull request's state and resulting base-branch
+  commit before reporting success or retrying an error. Check any CI triggered by that
+  commit; when repository instructions say merging deploys the change, monitor and
+  perform the documented verification. Ask before reverting, fixing forward, or
+  triggering a manual deployment.
 - When explicitly asked to publish text the agent wrote through the user's GitHub
   account, disclose that authorship with the actual client and model. Use
   `Written by an agent (<client>, <model>).` Do not attribute the text to the user or
