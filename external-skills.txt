@@ -5,7 +5,8 @@
 # `.\link.ps1 -ExternalSkills`.
 
 anthropics/skills@frontend-design
-cli/cli@gh
 clerk/skills
+cli/cli@gh
+doeixd/solid-skill@solid-js-1x-best-practices-and-api
 github/gh-stack@gh-stack
 khmm12/solidjs-v2-skills
