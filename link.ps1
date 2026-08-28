@@ -1,3 +1,16 @@
+<#
+.SYNOPSIS
+    Links personal skills into the agent skill directories.
+
+.PARAMETER GlobalInstructions
+    Also links global/AGENTS.md for Claude Code and Codex without replacing
+    existing files.
+
+.PARAMETER ExternalSkills
+    Also installs the third-party skills listed in external-skills.txt from the
+    registry. Installing needs network access and never removes skills that the
+    manifest no longer lists.
+#>
 param([switch] $GlobalInstructions, [switch] $ExternalSkills)
 
 $ErrorActionPreference = 'Stop'

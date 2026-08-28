@@ -48,7 +48,7 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 .\link.ps1 -ExternalSkills
 ```
 
-Installing needs network access and `npx`. Rerunning is safe and picks up new manifest entries, but nothing is ever removed: drop a skill by deleting its line and running `npx skills remove <skill> -g`. Update everything already installed with `npx skills update -g`.
+Rerunning is safe and picks up new manifest entries. To drop a skill, delete its line and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
 | Source | Skills |
 | --- | --- |
@@ -58,4 +58,4 @@ Installing needs network access and `npx`. Rerunning is safe and picks up new ma
 | [`github/gh-stack`](https://skills.sh/github/gh-stack) | `gh-stack` |
 | [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
 
-Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. `npx skills list -g` reports what is currently installed and where each skill came from.
+Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: every install takes whatever the source publishes at that moment.
