@@ -14,6 +14,31 @@
   synthetic data. Only if the sole usable view exposes genuinely private data,
   redact it or say what could not be captured.
 
+## Commit messages
+
+- Follow the repository's existing convention when it has one: a commit template,
+  documented rules in its contributing guide or agent instructions, or a pattern that
+  is plainly consistent across recent `git log` history. Never reformat a repository
+  onto a different convention as a side effect of an unrelated change.
+- Where no convention is established, use Scoped Commits
+  (https://scopedcommits.com/): a `<scope>: <description>` subject, then an optional
+  body and optional trailers, each separated by a blank line.
+
+  ```
+  <scope>: <description>
+
+  [optional body]
+
+  [optional trailer(s)]
+  ```
+
+- The scope names the subsystem, area, or module the commit touches. Reuse the scope
+  names already present in the repository's history rather than inventing new ones.
+  For a change spanning several areas, prefer a broader enclosing scope, or list a
+  few comma-separated scopes, or use `treewide` for genuinely repository-wide edits.
+- Write the description as a concise summary of what the commit does. Reverts and
+  merges keep whatever format the tooling generates.
+
 ## GitHub communication
 
 - When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
