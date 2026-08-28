@@ -53,10 +53,8 @@ function Add-FileLinkIfAbsent($source, $target) {
 
 Get-ChildItem "$repoRoot\skills" -Directory | ForEach-Object {
     Add-Junction $_.FullName "$HOME\.claude\skills\$($_.Name)"
-}
-
-foreach ($name in 'oracle', 'designer') {
-    Add-Junction "$repoRoot\skills\$name" "$HOME\.agents\skills\$name"
+    # Codex and the other agents read ~/.agents/skills.
+    Add-Junction $_.FullName "$HOME\.agents\skills\$($_.Name)"
 }
 
 if ($GlobalInstructions) {
