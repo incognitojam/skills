@@ -87,12 +87,11 @@ link_path_if_absent() {
 }
 
 for skill in "$repo_root"/skills/*/; do
-	link_path "${skill%/}" "$HOME/.claude/skills/$(basename -- "$skill")"
-done
+	skill_name=$(basename -- "$skill")
 
-# Codex-facing skills live outside ~/.claude.
-for skill_name in oracle designer; do
-	link_path "$repo_root/skills/$skill_name" "$HOME/.agents/skills/$skill_name"
+	link_path "${skill%/}" "$HOME/.claude/skills/$skill_name"
+	# Codex and the other agents read ~/.agents/skills.
+	link_path "${skill%/}" "$HOME/.agents/skills/$skill_name"
 done
 
 if [ "$link_global_instructions" = true ]; then

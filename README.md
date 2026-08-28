@@ -15,7 +15,7 @@ Personal agent skills shared across Claude Code and Codex. Install them with the
 The scripts link them into place as follows:
 
 - All `skills/<name>/` directories are linked into `~/.claude/skills/`.
-- `oracle` and `designer` are additionally linked into `~/.agents/skills/` for Codex.
+- Each is also linked into `~/.agents/skills/`, which Codex and the other agents read.
 
 Personal cross-repository instructions are tracked separately in [`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
 
