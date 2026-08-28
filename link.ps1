@@ -1,4 +1,17 @@
-param([switch] $GlobalInstructions)
+<#
+.SYNOPSIS
+    Links personal skills into the agent skill directories.
+
+.PARAMETER GlobalInstructions
+    Also links global/AGENTS.md for Claude Code and Codex without replacing
+    existing files.
+
+.PARAMETER ExternalSkills
+    Also installs the third-party skills listed in external-skills.txt from the
+    registry. Installing needs network access and never removes skills that the
+    manifest no longer lists.
+#>
+param([switch] $GlobalInstructions, [switch] $ExternalSkills)
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = $PSScriptRoot
@@ -50,4 +63,20 @@ if ($GlobalInstructions) {
     $source = "$repoRoot\global\AGENTS.md"
     Add-FileLinkIfAbsent $source "$HOME\.claude\CLAUDE.md"
     Add-FileLinkIfAbsent $source "$HOME\.codex\AGENTS.md"
+}
+
+if ($ExternalSkills) {
+    if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
+        throw 'npx is required to install external skills.'
+    }
+
+    Get-Content "$repoRoot\external-skills.txt" | ForEach-Object {
+        $package = ($_ -replace '#.*$', '').Trim()
+        if (-not $package) {
+            return
+        }
+
+        Write-Output "installing: $package"
+        npx --yes skills add $package --global --yes
+    }
 }

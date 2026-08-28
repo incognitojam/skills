@@ -35,3 +35,27 @@ This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Exis
 | --- | --- |
 | [`designer`](skills/designer/SKILL.md) | Design and implement distinctive, production-grade frontend experiences. Use when Codex is building or substantially reshaping pages, components, landing pages, dashboards, design systems, interaction states, motion, or interface copy where strong aesthetic judgment matters; do not use for headless logic or mechanical frontend fixes. |
 | [`oracle`](skills/oracle/SKILL.md) | Consult a read-only oracle that reasons about the working tree from an independent frontier model. Use when the caller needs a senior second opinion for difficult architecture, debugging, performance, planning, design judgment, or independent review; do not use for routine searches or implementation. |
+
+## Installed skills
+
+Third-party skills installed from the [open skills registry](https://skills.sh/) with the Skills CLI. Their files live outside this repository, under `~/.agents/skills/` or `~/.claude/skills/`, but the set is tracked here in [`external-skills.txt`](external-skills.txt). Install every skill in that manifest on a new machine with:
+
+```sh
+./link.sh --external-skills
+```
+
+```powershell
+.\link.ps1 -ExternalSkills
+```
+
+Rerunning is safe and picks up new manifest entries. To drop a skill, delete its line and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+
+| Source | Skills |
+| --- | --- |
+| [`anthropics/skills`](https://skills.sh/anthropics/skills) | `frontend-design` |
+| [`cli/cli`](https://skills.sh/cli/cli) | `gh` |
+| [`clerk/skills`](https://skills.sh/clerk/skills) | `clerk` router plus 20 framework, billing, orgs, webhooks, and testing skills |
+| [`github/gh-stack`](https://skills.sh/github/gh-stack) | `gh-stack` |
+| [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
+
+Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: every install takes whatever the source publishes at that moment.

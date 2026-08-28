@@ -1,0 +1,11 @@
+# Third-party skills installed from https://skills.sh/ with the Skills CLI.
+# One package spec per line, in the form accepted by `npx skills add`:
+# `<owner>/<repo>` installs every skill in the repository, `<owner>/<repo>@<skill>`
+# installs one. Install them with `./link.sh --external-skills` or
+# `.\link.ps1 -ExternalSkills`.
+
+anthropics/skills@frontend-design
+cli/cli@gh
+clerk/skills
+github/gh-stack@gh-stack
+khmm12/solidjs-v2-skills
