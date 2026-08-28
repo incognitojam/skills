@@ -51,3 +51,20 @@
   the disclosure sentence as a final paragraph without a horizontal rule. If an agent
   disclosure already exists, update it instead of adding another. Do not add a
   disclosure to text written entirely by the user.
+
+## Stacked pull requests
+
+- Most changes are a single pull request. Stack only when a large change splits into
+  dependent, independently reviewable layers; unrelated concerns stay separate,
+  non-stacked pull requests.
+- Manage a stack exclusively with the `gh stack` extension
+  (`gh extension install github/gh-stack`), and read `gh stack --help` first where the
+  `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`, or manual
+  retargeting of a pull request corrupt the stack's dependent branches and its GitHub
+  metadata. If the extension is unavailable, report that instead of falling back to
+  plain git.
+- `gh stack submit` and `gh stack merge` create or change remote pull requests, so the
+  rules above apply: only when the user explicitly asks. Agent-facing documentation
+  recommends `gh stack merge --yes`, which suppresses the confirmation, and a merge
+  scoped to one pull request still lands every unmerged layer below it. Run
+  `gh stack view --json` first and state exactly which layers will land.
