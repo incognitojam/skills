@@ -10,3 +10,5 @@ cli/cli@gh
 doeixd/solid-skill@solid-js-1x-best-practices-and-api
 github/gh-stack@gh-stack
 khmm12/solidjs-v2-skills
+neondatabase/agent-skills@neon
+neondatabase/agent-skills@neon-postgres
