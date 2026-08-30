@@ -45,13 +45,13 @@ Quote the user's original wording when details matter. Separate facts from hypot
 
 Run `scripts/consult.sh` from this skill directory. Start it with the shell tool's yielded or background-process mechanism because a consultation can take several minutes. Do not append shell `&`; retain the process handle so it can be polled or stopped cleanly.
 
-Use unique report and log paths for concurrent consultations:
+Use unique report and log paths for concurrent consultations, inside an ignored `.scratch/` directory in the worktree (create it with `mkdir -p .scratch` and ensure `git check-ignore -q .scratch` succeeds first):
 
 ```bash
 <path-to-this-skill>/scripts/consult.sh \
   --cwd "$PWD" \
-  --output /tmp/oracle-<task-slug>.md \
-  --log /tmp/oracle-<task-slug>.log <<'PROMPT'
+  --output .scratch/oracle-<task-slug>.md \
+  --log .scratch/oracle-<task-slug>.log <<'PROMPT'
 Task: ...
 
 Context:

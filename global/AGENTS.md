@@ -14,6 +14,24 @@
   synthetic data. Only if the sole usable view exposes genuinely private data,
   redact it or say what could not be captured.
 
+## Scratch files
+
+- Keep scratch and intermediate work inside the repository worktree being worked in,
+  under an ignored `.scratch/` directory at its root. That covers notes, plans,
+  reports from delegated agents, draft patches, logs, and one-off scripts. Do not use
+  `/tmp`, `$TMPDIR`, or the home directory: work there is invisible to the user and
+  to `git status`, collides across concurrent sessions and worktrees, and disappears
+  on reboot.
+- Before writing there, confirm `git check-ignore -q .scratch` succeeds. If it fails,
+  add `.scratch/` to `.git/info/exclude` rather than to the tracked `.gitignore`,
+  which the user may not want changed. Never commit anything from `.scratch/`.
+- Name files by task, `.scratch/<task-slug>-<purpose>.<ext>`, so concurrent sessions
+  in the same worktree do not overwrite one another.
+- Outside a repository, or when a tool insists on a temporary path, use a
+  task-specific subdirectory such as `mktemp -d` and tell the user where it is.
+  Caches and configuration that tools own (package managers, `gh`, agent memory)
+  stay where those tools put them.
+
 ## Commit messages
 
 - Follow the repository's existing convention when it has one: a commit template,
