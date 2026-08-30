@@ -40,13 +40,13 @@ Tell the user briefly before invoking Designer and name the UI scope being deleg
 
 Run `scripts/build.sh` from this skill directory with the shell tool's yielded or background-process mechanism. Do not append shell `&`; retain the process handle so it can be polled or stopped cleanly.
 
-Use unique report and log paths:
+Use unique report and log paths inside an ignored `.scratch/` directory in the worktree (create it with `mkdir -p .scratch` and ensure `git check-ignore -q .scratch` succeeds first):
 
 ```bash
 <path-to-this-skill>/scripts/build.sh \
   --cwd "$PWD" \
-  --output /tmp/designer-<task-slug>.md \
-  --log /tmp/designer-<task-slug>.log <<'PROMPT'
+  --output .scratch/designer-<task-slug>.md \
+  --log .scratch/designer-<task-slug>.log <<'PROMPT'
 Task: ...
 
 Scope:
