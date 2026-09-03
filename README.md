@@ -52,13 +52,14 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 
 Rerunning is safe and picks up new manifest entries. To drop a skill, delete its line and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
-| Source | Skills |
-| --- | --- |
+| Source | Skills | Comment |
+| --- | --- | --- |
 | [`anthropics/skills`](https://skills.sh/anthropics/skills) | `frontend-design` |
 | [`clerk/skills`](https://skills.sh/clerk/skills) | `clerk` router plus 20 framework, billing, orgs, webhooks, and testing skills |
 | [`cli/cli`](https://skills.sh/cli/cli) | `gh` |
 | [`doeixd/solid-skill`](https://skills.sh/doeixd/solid-skill) | `solid-js-1x-best-practices-and-api` |
 | [`github/gh-stack`](https://skills.sh/github/gh-stack) | `gh-stack` |
+| [`humanlayer/skills`](https://skills.sh/humanlayer/skills) | `show-me` | Simplify explanations and diffs https://x.com/mattpocockuk/status/2095460192871698728 |
 | [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
 
 Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: every install takes whatever the source publishes at that moment.
