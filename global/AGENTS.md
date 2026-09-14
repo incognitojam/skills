@@ -32,6 +32,23 @@
   Caches and configuration that tools own (package managers, `gh`, agent memory)
   stay where those tools put them.
 
+## Verification and validation
+
+- For changes that affect runtime behavior, run the application or affected code
+  path and inspect its actual behavior. Exercise the changed flow and relevant
+  adjacent flows, check the observed results against expectations, and look for
+  runtime errors and unintended effects, including browser console and server
+  errors where applicable. Scale validation to the scope and risk of the change.
+- Automated tests count as behavioral validation when they exercise the relevant
+  behavior and check meaningful outcomes. A passing suite alone does not establish
+  that the changed flow works. Continue to run required automated checks.
+- In pull requests and completion reports, describe the specific scenarios
+  exercised, observed outcomes, and any behavior that could not be verified,
+  including why. Prioritize reporting behavioural validation: the scenarios
+  exercised and observed outcomes matter more than listing successful linting and
+  type checks. For changes without runtime effects, use appropriate checks and
+  explain what they establish.
+
 ## Commit messages
 
 - Follow the repository's existing convention when it has one: a commit template,
