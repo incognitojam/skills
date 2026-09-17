@@ -11,5 +11,6 @@ doeixd/solid-skill@solid-js-1x-best-practices-and-api
 github/gh-stack@gh-stack
 humanlayer/skills@show-me
 khmm12/solidjs-v2-skills
+mattpocock/skills@pr
 neondatabase/agent-skills@neon
 neondatabase/agent-skills@neon-postgres
