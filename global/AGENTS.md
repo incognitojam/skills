@@ -76,6 +76,11 @@
 
 ## GitHub communication
 
+- PR descriptions should justify the final change: explain the problem, resulting
+  behavior, and relevant validation. Omit intermediate PR states and problems
+  encountered during development unless they help reviewers understand or assess
+  the final change. Update the description when scope changes so it reflects the
+  final result.
 - When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
   arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
   according to user preferences. When writing Markdown files, follow the existing
