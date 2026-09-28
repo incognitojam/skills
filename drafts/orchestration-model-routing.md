@@ -4,7 +4,7 @@
 > Codex-dispatch pattern proved flaky in practice — Claude got stuck waiting on
 > `codex exec`, polling logs or forcing early responses. Cross-provider subagents are
 > better handled by the harness itself (as in T3 Code) than by CLI dispatch from the
-> main thread. Codex itself stays in use (the oracle and designer skills remain
+> main thread. Codex itself stays in use (the oracle skill remains
 > Codex-facing via `~/.agents/skills/`); only the Claude-side dispatch skill is gone.
 > Kept as a draft in case parts of the routing policy are worth reviving.
 
