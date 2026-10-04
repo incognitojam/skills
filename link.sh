@@ -119,6 +119,6 @@ if [ "$install_external_skills" = true ]; then
 		[ -n "$package" ] || continue
 
 		printf 'installing: %s\n' "$package"
-		npx --yes skills add "$package" --global --yes
+		npx --yes skills add "$package" --global --yes --agent claude-code codex
 	done 3<"$manifest"
 fi

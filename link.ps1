@@ -75,6 +75,9 @@ if ($ExternalSkills) {
         }
 
         Write-Output "installing: $package"
-        npx --yes skills add $package --global --yes
+        npx --yes skills add $package --global --yes --agent claude-code codex
+        if ($LASTEXITCODE -ne 0) {
+            throw "Failed to install $package (exit code $LASTEXITCODE)."
+        }
     }
 }
