@@ -44,10 +44,10 @@
   that the changed flow works. Continue to run required automated checks.
 - In pull requests and completion reports, describe the specific scenarios
   exercised, observed outcomes, and any behavior that could not be verified,
-  including why. Prioritize reporting behavioural validation: the scenarios
-  exercised and observed outcomes matter more than listing successful linting and
-  type checks. For changes without runtime effects, use appropriate checks and
-  explain what they establish.
+  including why. Do not list routine checks that passed, such as linting, type
+  checks, or existing test suites: CI already reports them and they add noise.
+  Mention a check only when it is itself the validation for the change, such as
+  for changes without runtime effects, or when it failed.
 
 ## Commit messages
 
