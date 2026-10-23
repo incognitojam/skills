@@ -55,7 +55,6 @@ Rerunning is safe and picks up new manifest entries. To drop a skill, delete its
 | --- | --- | --- |
 | [`anthropics/skills`](https://skills.sh/anthropics/skills) | `frontend-design` |
 | [`clerk/skills`](https://skills.sh/clerk/skills) | `clerk` router plus 20 framework, billing, orgs, webhooks, and testing skills |
-| [`cli/cli`](https://skills.sh/cli/cli) | `gh` |
 | [`doeixd/solid-skill`](https://skills.sh/doeixd/solid-skill) | `solid-js-1x-best-practices-and-api` |
 | [`github/gh-stack`](https://skills.sh/github/gh-stack) | `gh-stack` |
 | [`humanlayer/skills`](https://skills.sh/humanlayer/skills) | `show-me` | Simplify explanations and diffs https://x.com/mattpocockuk/status/2095460192871698728 |

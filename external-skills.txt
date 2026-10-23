@@ -6,7 +6,6 @@
 
 anthropics/skills@frontend-design
 clerk/skills
-cli/cli@gh
 cloudflare/skills@cloudflare
 doeixd/solid-skill@solid-js-1x-best-practices-and-api
 github/gh-stack@gh-stack
