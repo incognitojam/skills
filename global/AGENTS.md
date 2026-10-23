@@ -22,6 +22,9 @@
   `/tmp`, `$TMPDIR`, or the home directory: work there is invisible to the user and
   to `git status`, collides across concurrent sessions and worktrees, and disappears
   on reboot.
+- Run one-off Python that needs third-party packages with uv:
+  `uv run --with pillow python -c '...'`, or `uv run --with pillow script.py` for a
+  script file.
 - Before writing there, confirm `git check-ignore -q .scratch` succeeds. If it fails,
   add `.scratch/` to `.git/info/exclude` rather than to the tracked `.gitignore`,
   which the user may not want changed. Never commit anything from `.scratch/`.
