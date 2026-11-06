@@ -136,9 +136,14 @@
 
 ## Stacked pull requests
 
-- Most changes are a single pull request. Stack only when a large change splits into
-  dependent, independently reviewable layers; unrelated concerns stay separate,
-  non-stacked pull requests.
+- Make each pull request the smallest change that works on its own, even within a
+  larger request or thread. Small pull requests are easier to review, merge sooner,
+  and can be tested and reverted individually; unmerged code is worth nothing.
+  Splitting by layer, such as frontend and backend, or into parts that only work once
+  the last lands does not count.
+- Stack only when a pull request builds on an earlier one that hasn't merged yet. Each
+  layer must still work and ship without the layers above it. Unrelated changes stay
+  separate, non-stacked pull requests.
 - Manage a stack exclusively with the `gh stack` extension
   (`gh extension install github/gh-stack`), and read `gh stack --help` first where the
   `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`, or manual
