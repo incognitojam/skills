@@ -103,6 +103,11 @@
   resolve review feedback on it. Merging, closing, and reopening still need their
   own explicit request, as does commenting on, reviewing, or resolving threads on
   issues and pull requests the agent does not own.
+- An agent also owns a branch it created for the task or was asked to work on, and
+  the branch of a pull request it owns. It may rewrite and force push an owned branch
+  other than the default branch, after checking that the push discards only commits it
+  means to replace. Pin the lease to the commit it checked:
+  `git push --force-with-lease=<branch>:<sha>`.
 - Merge a pull request only when the user explicitly asks and the target is
   unambiguous. Respect repository merge policy and stop for failed required checks,
   unresolved requested changes, conflicts, or other merge blockers unless the user
