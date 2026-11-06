@@ -103,6 +103,9 @@
   resolve review feedback on it. Merging, closing, and reopening still need their
   own explicit request, as does commenting on, reviewing, or resolving threads on
   issues and pull requests the agent does not own.
+- Monitor a pull request the agent owns after opening it or pushing to it, using the
+  harness's watch tool if it has one, and handle the checks and review feedback that
+  come in.
 - An agent also owns a branch it created for the task or was asked to work on, and
   the branch of a pull request it owns. It may rewrite and force push an owned branch
   other than the default branch, after checking that the push discards only commits it
