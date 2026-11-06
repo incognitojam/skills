@@ -95,21 +95,21 @@
   thread unless the user explicitly asks for that action. A GitHub link, a request to
   investigate, or having authored a pull request in an earlier task is not
   permission to write on GitHub or resolve a thread.
-- Asking to open a pull request, or to work on an existing one, is that explicit
-  request for the pull request's ongoing work: the agent owns it for the task.
-  Without asking again, it may push to the pull request's branch; update its title,
+- Asking you to open a pull request, or to work on an existing one, is that explicit
+  request for the pull request's ongoing work: you own it for the task.
+  Without asking again, you may push to the pull request's branch; update its title,
   body, and attached evidence; mark a draft ready for review once the verification
   and evidence the repository's instructions call for are in place; and reply to and
   resolve review feedback on it. Merging, closing, and reopening still need their
   own explicit request, as does commenting on, reviewing, or resolving threads on
-  issues and pull requests the agent does not own.
-- Monitor a pull request the agent owns after opening it or pushing to it, using the
+  issues and pull requests you do not own.
+- Monitor a pull request you own after opening it or pushing to it, using the
   harness's watch tool if it has one, and handle the checks and review feedback that
   come in.
-- An agent also owns a branch it created for the task or was asked to work on, and
-  the branch of a pull request it owns. It may rewrite and force push an owned branch
-  other than the default branch, after checking that the push discards only commits it
-  means to replace. Pin the lease to the commit it checked:
+- You also own a branch you created for the task or were asked to work on, and
+  the branch of a pull request you own. You may rewrite and force push an owned branch
+  other than the default branch, after checking that the push discards only commits you
+  mean to replace. Pin the lease to the commit you checked:
   `git push --force-with-lease=<branch>:<sha>`.
 - Merge a pull request only when the user explicitly asks and the target is
   unambiguous. Respect repository merge policy and stop for failed required checks,
@@ -120,7 +120,7 @@
   commit; when repository instructions say merging deploys the change, monitor and
   perform the documented verification. Ask before reverting, fixing forward, or
   triggering a manual deployment.
-- When publishing text the agent wrote through the user's GitHub account, disclose
+- When publishing text you wrote through the user's GitHub account, disclose
   that authorship with the actual client and model. Use
   `Written by an agent (<client>, <model>).` Do not attribute the text to the user or
   guess unknown identity details; omit any unknown detail instead.
@@ -154,8 +154,8 @@
   metadata. If the extension is unavailable, report that instead of falling back to
   plain git.
 - `gh stack submit` creates a pull request for each new layer, so it needs an explicit
-  request whenever it would open one; pushing updates to layers the agent already
-  owns follows the ownership rule above. `gh stack merge` needs an explicit request
+  request whenever it would open one; pushing updates to layers you already
+  own follows the ownership rule above. `gh stack merge` needs an explicit request
   like any merge. Agent-facing documentation recommends `gh stack merge --yes`, which
   suppresses the confirmation, and a merge scoped to one pull request still lands
   every unmerged layer below it. Run `gh stack view --json` first and state exactly
