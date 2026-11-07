@@ -53,7 +53,9 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 .\link.ps1 -ExternalSkills
 ```
 
-Rerunning is safe and picks up new manifest entries. To drop a skill, delete its line and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+Each manifest line names one repository, optionally followed by `--skill name ...` to select skills. Keep selections from the same repository on one line so the CLI fetches it once. Arguments are whitespace-separated; shell quoting is not supported.
+
+Rerunning is safe and picks up new manifest entries. To drop a skill, delete its selection from the manifest and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
 | Source | Skills | Comment |
 | --- | --- | --- |

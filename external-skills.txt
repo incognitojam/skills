@@ -1,17 +1,14 @@
 # Third-party skills installed from https://skills.sh/ with the Skills CLI.
-# One package spec per line, in the form accepted by `npx skills add`:
-# `<owner>/<repo>` installs every skill in the repository, `<owner>/<repo>@<skill>`
-# installs one. Install them with `./link.sh --external-skills` or
-# `.\link.ps1 -ExternalSkills`.
+# One repository per line, optionally followed by `--skill name ...` to select
+# skills. Arguments are whitespace-separated, without shell quoting. Install
+# with `./link.sh --external-skills` or `.\link.ps1 -ExternalSkills`.
 
-anthropics/skills@frontend-design
+anthropics/skills --skill frontend-design
 clerk/skills
-cloudflare/skills@cloudflare
-doeixd/solid-skill@solid-js-1x-best-practices-and-api
-github/gh-stack@gh-stack
-humanlayer/skills@show-me
+cloudflare/skills --skill cloudflare
+doeixd/solid-skill --skill solid-js-1x-best-practices-and-api
+github/gh-stack --skill gh-stack
+humanlayer/skills --skill show-me
 khmm12/solidjs-v2-skills
-neondatabase/agent-skills@neon
-neondatabase/agent-skills@neon-postgres
-t3dotgg/tstack@council
-t3dotgg/tstack@sol-loop
+neondatabase/agent-skills --skill neon neon-postgres
+t3dotgg/tstack --skill council sol-loop

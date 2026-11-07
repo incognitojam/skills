@@ -138,10 +138,12 @@ if [ "$install_external_skills" = true ]; then
 	# Read the manifest on fd 3 so npx keeps its own stdin.
 	while IFS= read -r package <&3 || [ -n "$package" ]; do
 		package=${package%%#*}
-		package=$(printf '%s' "$package" | tr -d '[:space:]')
-		[ -n "$package" ] || continue
+		package=${package%$'\r'}
+		read -r -a package_args <<< "$package"
+		[ -n "${package_args[0]:-}" ] || continue
 
 		printf 'installing: %s\n' "$package"
-		npx --yes skills add "$package" --global --yes --agent claude-code codex
+		# JSON mode fails if any requested skill is missing, even when others match.
+		npx --yes skills add "${package_args[@]}" --global --yes --json --agent claude-code codex
 	done 3<"$manifest"
 fi
