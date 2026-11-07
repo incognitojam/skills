@@ -8,14 +8,10 @@
 
 .PARAMETER ExternalSkills
     Also installs the third-party skills listed in external-skills.txt from the
-    registry, skipping completed installs. Installing needs Node.js/npx and network
-    access, and never removes skills that the manifest no longer lists.
-
-.PARAMETER RefreshExternalSkills
-    Reinstalls all external skills and discovers new skills in whole-repository
-    entries. Implies ExternalSkills.
+    registry. Installing needs network access and never removes skills that the
+    manifest no longer lists.
 #>
-param([switch] $GlobalInstructions, [switch] $ExternalSkills, [switch] $RefreshExternalSkills)
+param([switch] $GlobalInstructions, [switch] $ExternalSkills)
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = $PSScriptRoot
@@ -81,18 +77,22 @@ if ($GlobalInstructions) {
     Add-FileLinkIfAbsent $source "$HOME\.codex\AGENTS.md"
 }
 
-if ($ExternalSkills -or $RefreshExternalSkills) {
-    if (-not (Get-Command node -ErrorAction SilentlyContinue) -or
-        -not (Get-Command npx -ErrorAction SilentlyContinue)) {
-        throw 'Node.js and npx are required to install external skills.'
+if ($ExternalSkills) {
+    if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
+        throw 'npx is required to install external skills.'
     }
 
-    $externalArgs = @()
-    if ($RefreshExternalSkills) {
-        $externalArgs += '--refresh'
-    }
-    node (Join-Path $repoRoot 'scripts/install-external-skills.mjs') @externalArgs
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install external skills (exit code $LASTEXITCODE)."
+    Get-Content "$repoRoot\external-skills.txt" | ForEach-Object {
+        $package = ($_ -replace '#.*$', '').Trim()
+        if (-not $package) {
+            return
+        }
+
+        Write-Output "installing: $package"
+        $packageArgs = $package -split '\s+'
+        npx --yes skills add @packageArgs --global --yes --agent claude-code codex
+        if ($LASTEXITCODE -ne 0) {
+            throw "Failed to install $package (exit code $LASTEXITCODE)."
+        }
     }
 }

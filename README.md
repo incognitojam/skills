@@ -53,21 +53,9 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 .\link.ps1 -ExternalSkills
 ```
 
-Rerunning installs new manifest entries and repairs missing skills or agent links, but skips completed installs without invoking the CLI or downloading repositories again. Entries from the same repository are batched into one CLI invocation. Installation requires Node.js and npx; personal linking alone does not.
+Each manifest line names one repository, optionally followed by `--skill name ...` to select skills. Keep selections from the same repository on one line so the CLI fetches it once. Arguments are whitespace-separated; shell quoting is not supported.
 
-For individual skills, the installer checks the Skills CLI's global lock file and verifies that `SKILL.md` exists for both agents. Whole-repository entries need one successful install through these scripts to record which skills belong to the complete install. That receipt is saved as `.external-skills-install.json` beside the CLI's lock file, normally under `~/.agents/` (or `$XDG_STATE_HOME/skills/` when set).
-
-To refresh all manifest entries, including discovering newly added skills in whole-repository entries, run:
-
-```sh
-./link.sh --refresh-external-skills
-```
-
-```powershell
-.\link.ps1 -RefreshExternalSkills
-```
-
-The refresh flag includes external installation, so it can be used on its own. To drop a skill, delete its line and run `npx skills remove <skill> -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+Rerunning is safe and picks up new manifest entries. To drop a skill, delete its selection from the manifest and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
 | Source | Skills | Comment |
 | --- | --- | --- |
@@ -79,4 +67,4 @@ The refresh flag includes external installation, so it can be used on its own. T
 | [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
 | [`t3dotgg/tstack`](https://github.com/t3dotgg/tstack) | `council`, `sol-loop` | Cross-provider review loops, run when you ask for them by name |
 
-Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: new installs and explicit refreshes take whatever the source publishes at that moment. Skipped installs keep their existing contents.
+Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: every install takes whatever the source publishes at that moment.
