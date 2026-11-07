@@ -160,3 +160,43 @@
   suppresses the confirmation, and a merge scoped to one pull request still lands
   every unmerged layer below it. Run `gh stack view --json` first and state exactly
   which layers will land.
+
+## Delegating work
+
+This applies where the harness offers subagent or delegation tools; where its own
+rules on when or how to delegate are more specific, follow those. If you are a
+subagent, do the work yourself and report back, and delegate further only if your
+brief says to.
+
+- The main thread orchestrates; subagents do the work. Keep code, diffs, and logs out
+  of main context, so that only subagents' reports come back. A trivial tweak touching
+  a file or two is fine to make directly. Once an edit means reading several files or
+  wants tests or review, delegate it, even mid-edit.
+- Route among the models the harness offers by these defaults, using each tier's
+  latest version. Sol takes as much as it can handle well, so that usage stays balanced
+  across subscriptions:
+  - GPT Sol: building with a clear spec and bounded scope, mechanical work such as
+    migrations and data analysis, investigation, root-causing bugs, codebase analysis,
+    triage, adversarial review, and computer use. It is weak on design and long
+    unattended building. Give it a self-contained brief and ask for a structured
+    report rather than working with it interactively.
+  - Opus: plans, pull request stack decomposition, untangling spiralled complexity,
+    work too open-ended to specify, long unattended work, and anything that needs
+    taste, such as UI, copy, and API design.
+  - Fable: hard problems where Opus's output misses the bar.
+  - Haiku: narrow, read-heavy lookups that return a short report.
+- Those are defaults, not limits. If a model's output misses the bar, rerun it with a
+  stronger one without asking. For anything that ships, quality comes before cost. If
+  the user named a model and it is unavailable, say so rather than substituting.
+- Give a builder the whole job, including its tests. Its report is not verification:
+  judge the output, and have a reviewer that did not build it check anything that
+  ships, preferably on another provider's model.
+- Keep reviewers read-only, with no subagents of their own. Give them the intent, the
+  base commit, and what is out of scope, and ask for findings graded blocker, should,
+  or nit, with file and line. Do not edit the files under review while one runs, and
+  do not treat a timeout or missing reply as approval.
+- Check each finding yourself. Make the smallest fix for what you agree with, decline
+  nits and out-of-scope findings, and push back with evidence rather than agreeing to
+  end the loop. Start another round only for an open blocker or should, or changed
+  behavior, up to three rounds. Then show the user both sides of whatever is disputed.
+- Get the user's approval on the plan before multi-PR work starts.
