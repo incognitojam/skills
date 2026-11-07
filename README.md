@@ -16,6 +16,7 @@ The scripts link them into place as follows:
 
 - All `skills/<name>/` directories are linked into `~/.claude/skills/`.
 - Each is also linked into `~/.agents/skills/`, which Codex and the other agents read.
+- Links left behind by skills removed from this repository are deleted. Other links are left alone.
 
 Personal cross-repository instructions are tracked separately in [`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
 

@@ -94,6 +94,24 @@ for skill in "$repo_root"/skills/*/; do
 	link_path "${skill%/}" "$HOME/.agents/skills/$skill_name"
 done
 
+# Skills removed from this repository leave links behind. Only touch broken links
+# into this checkout, since these directories also hold other people's skills.
+remove_stale_links() {
+	local link
+	for link in "$1"/*; do
+		[ -L "$link" ] && [ ! -e "$link" ] || continue
+		case $(readlink -- "$link") in
+			"$repo_root"/skills/*)
+				rm -- "$link"
+				printf 'removed: %s\n' "$link"
+				;;
+		esac
+	done
+}
+
+remove_stale_links "$HOME/.claude/skills"
+remove_stale_links "$HOME/.agents/skills"
+
 if [ "$link_global_instructions" = true ]; then
 	link_path_if_absent "$repo_root/global/AGENTS.md" "$HOME/.claude/CLAUDE.md"
 	link_path_if_absent "$repo_root/global/AGENTS.md" "$HOME/.codex/AGENTS.md"
