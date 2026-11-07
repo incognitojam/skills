@@ -1,10 +1,17 @@
 import os
+import re
 from pathlib import Path
 import subprocess
 import shutil
 import tempfile
 
 source_repo = Path(__file__).resolve().parents[1]
+# Keep new manifest entries from silently reintroducing moving source revisions.
+for line in (source_repo / 'external-skills.txt').read_text().splitlines():
+    entry = line.split('#', 1)[0].strip()
+    if entry:
+        assert re.fullmatch(r'https://github\.com/[^/]+/[^/]+/tree/[0-9a-f]{40}', entry.split()[0])
+
 if subprocess.run(['git', 'check-ignore', '-q', '.scratch'], cwd=source_repo).returncode:
     exclude = subprocess.check_output(['git', 'rev-parse', '--git-path', 'info/exclude'],
                                       cwd=source_repo, text=True).strip()
@@ -82,3 +89,27 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
     manifest.write_text(f'{source.as_posix()} --skill alpha missing\n{next_entry}\n')
     output = install('--external-skills', expected=1)
     assert f'installing: {next_entry}' not in output
+
+    # A pinned GitHub URL must keep installing the old commit after its branch moves.
+    def git(*args):
+        return subprocess.check_output(['git', '-C', str(source), *args], env=env,
+                                       encoding='utf-8').strip()
+
+    git('init', '-q')
+    git('config', 'user.name', 'Fixture Author')
+    git('config', 'user.email', 'fixture@example.invalid')
+    git('add', '.')
+    git('commit', '-qm', 'Initial synthetic skills')
+    revision = git('rev-parse', 'HEAD')
+    (source / 'alpha' / 'reference.txt').write_text('New branch content\n')
+    git('commit', '-qam', 'Move the branch ahead of the pin')
+    env['GIT_CONFIG_GLOBAL'] = str(repo / '.scratch' / 'gitconfig')
+    remote = 'https://github.com/example/skills'
+    git('config', '--global', f'url.{source.as_uri()}.insteadOf', remote + '.git')
+    manifest.write_text(f'{remote}/tree/{revision} --skill alpha # ref=main\n')
+    install('--external-skills')
+    for agent in ('.agents', '.claude'):
+        assert (home / agent / 'skills' / 'alpha' / 'reference.txt').read_text() == 'Synthetic alpha reference.\n'
+
+    manifest.write_text(f'{remote}/tree/{"0" * 40} --skill alpha # ref=main\n')
+    install('--external-skills', expected=1)

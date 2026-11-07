@@ -1,6 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>incognitojam/renovate-config"],
+  "extends": [
+    "github>incognitojam/renovate-config",
+    "helpers:githubDigestChangelogs"
+  ],
   "automerge": false,
   "customManagers": [
     {
@@ -9,6 +12,21 @@
       "matchStrings": ["\\bskills@(?<currentValue>\\d+\\.\\d+\\.\\d+)\\b"],
       "depNameTemplate": "skills",
       "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^external-skills\\.txt$/"],
+      "matchStrings": ["https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/tree/(?<currentDigest>[a-f0-9]{40})[^\\r\\n]*# ref=(?<currentValue>\\S+)"],
+      "datasourceTemplate": "git-refs",
+      "packageNameTemplate": "https://github.com/{{{depName}}}",
+      "versioningTemplate": "exact"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Propose skill instruction changes weekly for manual review",
+      "matchDatasources": ["git-refs"],
+      "schedule": ["* 0-3 * * 1"]
     }
   ]
 }
