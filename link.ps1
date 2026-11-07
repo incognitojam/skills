@@ -57,6 +57,20 @@ Get-ChildItem "$repoRoot\skills" -Directory | ForEach-Object {
     Add-Junction $_.FullName "$HOME\.agents\skills\$($_.Name)"
 }
 
+# Skills removed from this repository leave links behind. Only touch broken links
+# into this checkout, since these directories also hold other people's skills.
+"$HOME\.claude\skills", "$HOME\.agents\skills" | ForEach-Object {
+    Get-ChildItem $_ -Force -ErrorAction SilentlyContinue | ForEach-Object {
+        $linkTarget = @($_.Target)[0]
+        if ($_.LinkType -and $linkTarget -and
+            $linkTarget.StartsWith("$repoRoot\skills\", [StringComparison]::OrdinalIgnoreCase) -and
+            -not (Test-Path -LiteralPath $linkTarget)) {
+            Remove-Item $_.FullName -Force
+            Write-Output "removed: $($_.FullName)"
+        }
+    }
+}
+
 if ($GlobalInstructions) {
     $source = "$repoRoot\global\AGENTS.md"
     Add-FileLinkIfAbsent $source "$HOME\.claude\CLAUDE.md"
