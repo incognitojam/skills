@@ -33,6 +33,8 @@ jobs:
         with:
           node-version: '24'
       - name: Exercise installer behavior
+        env:
+          PYTHONUTF8: '1'
         shell: python
         run: |
           import os
