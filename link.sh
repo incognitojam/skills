@@ -4,15 +4,17 @@ set -euo pipefail
 repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 link_global_instructions=false
 install_external_skills=false
+refresh_external_skills=false
 
 usage() {
-	printf 'Usage: %s [--global-instructions] [--external-skills]\n' "$(basename -- "$0")"
+	printf 'Usage: %s [--global-instructions] [--external-skills] [--refresh-external-skills]\n' "$(basename -- "$0")"
 	printf '\n'
 	printf 'Links personal skills by default. With --global-instructions, also links\n'
 	printf 'global/AGENTS.md for Claude Code and Codex without replacing existing files.\n'
 	printf 'With --external-skills, also installs the third-party skills listed in\n'
-	printf 'external-skills.txt from the registry. Installing needs network access and\n'
-	printf 'never removes skills that the manifest no longer lists.\n'
+	printf 'external-skills.txt, skipping completed installs. Use --refresh-external-skills\n'
+	printf 'to reinstall them and discover new skills in whole-repository entries.\n'
+	printf 'Installing needs Node.js/npx and network access, and never removes skills.\n'
 }
 
 while [ "$#" -gt 0 ]; do
@@ -22,6 +24,10 @@ while [ "$#" -gt 0 ]; do
 			;;
 		--external-skills)
 			install_external_skills=true
+			;;
+		--refresh-external-skills)
+			install_external_skills=true
+			refresh_external_skills=true
 			;;
 		-h | --help)
 			usage
@@ -123,25 +129,14 @@ if [ "$link_global_instructions" = true ]; then
 fi
 
 if [ "$install_external_skills" = true ]; then
-	manifest="$repo_root/external-skills.txt"
-
-	if ! command -v npx >/dev/null 2>&1; then
-		printf 'error: npx is required to install external skills\n' >&2
+	if ! command -v node >/dev/null 2>&1 || ! command -v npx >/dev/null 2>&1; then
+		printf 'error: Node.js and npx are required to install external skills\n' >&2
 		exit 1
 	fi
 
-	if [ ! -f "$manifest" ]; then
-		printf 'error: %s is missing\n' "$manifest" >&2
-		exit 1
+	external_args=()
+	if [ "$refresh_external_skills" = true ]; then
+		external_args+=(--refresh)
 	fi
-
-	# Read the manifest on fd 3 so npx keeps its own stdin.
-	while IFS= read -r package <&3 || [ -n "$package" ]; do
-		package=${package%%#*}
-		package=$(printf '%s' "$package" | tr -d '[:space:]')
-		[ -n "$package" ] || continue
-
-		printf 'installing: %s\n' "$package"
-		npx --yes skills add "$package" --global --yes --agent claude-code codex
-	done 3<"$manifest"
+	node "$repo_root/scripts/install-external-skills.mjs" ${external_args[@]+"${external_args[@]}"}
 fi

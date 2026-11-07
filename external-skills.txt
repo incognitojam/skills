@@ -2,7 +2,8 @@
 # One package spec per line, in the form accepted by `npx skills add`:
 # `<owner>/<repo>` installs every skill in the repository, `<owner>/<repo>@<skill>`
 # installs one. Install them with `./link.sh --external-skills` or
-# `.\link.ps1 -ExternalSkills`.
+# `.\link.ps1 -ExternalSkills`; completed installs are skipped. Use
+# `--refresh-external-skills` / `-RefreshExternalSkills` to reinstall them.
 
 anthropics/skills@frontend-design
 clerk/skills
