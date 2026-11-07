@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>incognitojam/renovate-config"],
+  "automerge": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^link\\.(sh|ps1)$/"],
+      "matchStrings": ["\\bskills@(?<currentValue>\\d+\\.\\d+\\.\\d+)\\b"],
+      "depNameTemplate": "skills",
+      "datasourceTemplate": "npm"
+    }
+  ]
+}
