@@ -90,7 +90,8 @@ if ($ExternalSkills) {
 
         Write-Output "installing: $package"
         $packageArgs = $package -split '\s+'
-        npx --yes skills add @packageArgs --global --yes --agent claude-code codex
+        # JSON mode fails if any requested skill is missing, even when others match.
+        npx --yes skills add @packageArgs --global --yes --json --agent claude-code codex
         if ($LASTEXITCODE -ne 0) {
             throw "Failed to install $package (exit code $LASTEXITCODE)."
         }

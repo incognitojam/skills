@@ -143,6 +143,7 @@ if [ "$install_external_skills" = true ]; then
 		[ -n "${package_args[0]:-}" ] || continue
 
 		printf 'installing: %s\n' "$package"
-		npx --yes skills add "${package_args[@]}" --global --yes --agent claude-code codex
+		# JSON mode fails if any requested skill is missing, even when others match.
+		npx --yes skills add "${package_args[@]}" --global --yes --json --agent claude-code codex
 	done 3<"$manifest"
 fi
