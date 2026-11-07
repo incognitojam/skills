@@ -53,9 +53,9 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 .\link.ps1 -ExternalSkills
 ```
 
-Each manifest line names one repository, optionally followed by `--skill name ...` to select skills. Keep selections from the same repository on one line so the CLI fetches it once. Arguments are whitespace-separated; shell quoting is not supported.
+Each manifest line pins a GitHub repository to a full commit SHA, optionally followed by `--skill name ...` to select skills. The `# ref=...` comment tells Renovate which branch to track; installations use the pinned commit. Keep selections from the same repository on one line so the CLI fetches it once. Arguments are whitespace-separated; shell quoting is not supported.
 
-Rerunning is safe and picks up new manifest entries. To drop a skill, delete its selection from the manifest and run `npx skills remove <skill> -g`; to update everything already installed, run `npx skills update -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+Rerunning installs the committed revisions and picks up new manifest entries. Renovate proposes source updates weekly with links to the upstream commit comparisons; review and merge an update, then rerun the installer to use it. Automerge is disabled. To drop a skill, delete its selection from the manifest and run `npx skills remove <skill> -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
 | Source | Skills | Comment |
 | --- | --- | --- |
@@ -67,4 +67,4 @@ Rerunning is safe and picks up new manifest entries. To drop a skill, delete its
 | [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
 | [`t3dotgg/tstack`](https://github.com/t3dotgg/tstack) | `council`, `sol-loop` | Cross-provider review loops, run when you ask for them by name |
 
-Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record. Nothing is pinned: every install takes whatever the source publishes at that moment.
+Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record.
