@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  installers:
+    name: Installers (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: Linux
+          - os: macos-latest
+            platform: macOS
+          - os: windows-latest
+            platform: Windows
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Exercise installer behavior
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          import subprocess
+
+          repo = Path.cwd()
+          home = repo / '.scratch' / 'home'
+          home.mkdir(parents=True)
+          env = dict(os.environ, HOME=str(home), USERPROFILE=str(home),
+                     INSTALLER_TEST_HOME=str(home), DO_NOT_TRACK='1')
+
+          def install(*flags, expected=0):
+              if os.name == 'nt':
+                  switches = {'--global-instructions': '-GlobalInstructions',
+                              '--external-skills': '-ExternalSkills'}
+                  script = 'Set-Variable HOME $env:INSTALLER_TEST_HOME -Force; & ./link.ps1 '
+                  command = ['pwsh', '-NoProfile', '-Command', script + ' '.join(switches[f] for f in flags)]
+              else:
+                  command = ['/bin/bash', './link.sh', *flags]
+              result = subprocess.run(command, env=env, text=True, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, timeout=180)
+              print(result.stdout)
+              assert result.returncode == expected, f'Expected exit {expected}, got {result.returncode}'
+              return result.stdout
+
+          # Default installation and reruns keep both agents linked to this checkout.
+          install()
+          install()
+          for skill in (repo / 'skills').iterdir():
+              if skill.is_dir():
+                  for agent in ('.agents', '.claude'):
+                      assert (home / agent / 'skills' / skill.name).samefile(skill)
+
+          # Preserve existing global instructions, then exercise linking absent files.
+          instructions = [home / '.claude' / 'CLAUDE.md', home / '.codex' / 'AGENTS.md']
+          for path in instructions:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text('Synthetic existing instructions\n')
+          install('--global-instructions')
+          for path in instructions:
+              assert path.read_text() == 'Synthetic existing instructions\n'
+              path.unlink()
+          install('--global-instructions')
+          for path in instructions:
+              assert path.samefile(repo / 'global' / 'AGENTS.md')
+
+          # Use local skills to test the real CLI without fetching upstream skill repos.
+          source = repo / '.scratch' / 'source'
+          for name in ('alpha', 'beta', 'gamma'):
+              skill = source / name
+              skill.mkdir(parents=True)
+              (skill / 'SKILL.md').write_text(f'---\nname: {name}\ndescription: Synthetic CI skill.\n---\n')
+              (skill / 'reference.txt').write_text(f'Synthetic {name} reference.\n')
+          manifest = repo / 'external-skills.txt'
+          manifest.write_bytes(f'# comment\r\n\r\n{source.as_posix()} --skill alpha beta # selections\r\n'.encode())
+          install('--external-skills')
+          for name in ('alpha', 'beta'):
+              for agent in ('.agents', '.claude'):
+                  assert (home / agent / 'skills' / name / 'reference.txt').read_text() == f'Synthetic {name} reference.\n'
+          assert not (home / '.agents' / 'skills' / 'gamma').exists()
+
+          manifest.write_text(source.as_posix())  # Whole repo, without a final newline.
+          install('--external-skills')
+          assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
+
+          next_entry = f'{source.as_posix()} --skill beta'
+          manifest.write_text(f'{source.as_posix()} --skill alpha missing\n{next_entry}\n')
+          output = install('--external-skills', expected=1)
+          assert f'installing: {next_entry}' not in output
