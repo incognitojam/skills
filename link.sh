@@ -86,6 +86,11 @@ link_path_if_absent() {
 	link_path "$source" "$target"
 }
 
+# Keep links current after each pull. Outside a clone, there is nothing to pull.
+if git -C "$repo_root" rev-parse --git-dir >/dev/null 2>&1; then
+	git -C "$repo_root" config core.hooksPath .githooks
+fi
+
 for skill in "$repo_root"/skills/*/; do
 	skill_name=$(basename -- "$skill")
 
