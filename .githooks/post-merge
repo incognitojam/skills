@@ -1,0 +1,9 @@
+#!/bin/sh
+# Rerun link.sh when main moves, so added skills get linked without a manual step.
+
+# core.hooksPath is shared with worktrees, and link.sh links skills to the checkout
+# it runs from. Running it from a worktree would point them at a temporary directory.
+[ "$(git rev-parse --git-dir)" = "$(git rev-parse --git-common-dir)" ] || exit 0
+[ "$(git branch --show-current)" = main ] || exit 0
+
+exec "$(git rev-parse --show-toplevel)/link.sh" >/dev/null

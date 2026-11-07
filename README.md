@@ -29,6 +29,8 @@ Personal cross-repository instructions are tracked separately in [`global/AGENTS
 
 This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing files and unrelated links at either location are reported and left unchanged, so the default installers remain portable for people with their own global instructions. On Windows, skill directories use junctions; global instruction files use symbolic links with a hard-link fallback.
 
+`link.sh` also sets `core.hooksPath` so that pulling `main` into the main checkout reruns it, which picks up added skills on macOS and Linux. Edits to existing skills need no rerun, because they are symlinks. External skills are still installed by hand.
+
 ## Skills
 
 | Skill | Description |
