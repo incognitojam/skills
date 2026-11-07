@@ -13,3 +13,5 @@ humanlayer/skills@show-me
 khmm12/solidjs-v2-skills
 neondatabase/agent-skills@neon
 neondatabase/agent-skills@neon-postgres
+t3dotgg/tstack@council
+t3dotgg/tstack@sol-loop
