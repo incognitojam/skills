@@ -173,30 +173,50 @@ brief says to.
   a file or two is fine to make directly. Once an edit means reading several files or
   wants tests or review, delegate it, even mid-edit.
 - Route among the models the harness offers by these defaults, using each tier's
-  latest version. Sol takes as much as it can handle well, so that usage stays balanced
-  across subscriptions:
-  - GPT Sol: building with a clear spec and bounded scope, mechanical work such as
-    migrations and data analysis, investigation, root-causing bugs, codebase analysis,
-    triage, adversarial review, and computer use. It is weak on design and long
-    unattended building. Give it a self-contained brief and ask for a structured
-    report rather than working with it interactively.
-  - Opus: plans, pull request stack decomposition, untangling spiralled complexity,
-    work too open-ended to specify, long unattended work, and anything that needs
-    taste, such as UI, copy, and API design.
-  - Fable: hard problems where Opus's output misses the bar.
-  - Haiku: narrow, read-heavy lookups that return a short report.
+  latest version:
+  - GPT Sol, at high effort: building to a clear spec, mechanical changes, CI, and
+    scripts. It is cheap and fast, which keeps usage balanced across subscriptions.
+    It has no taste, widens scope beyond the brief, skips checks that CI runs, and
+    can write tests that accommodate the bug.
+  - Opus: plans, anything that needs taste (UI, wording, how a number is shown, API
+    design), investigation that reads many files, work too open-ended to specify, and
+    managing and reviewing a Sol builder. It can state as verified what it only
+    reasoned about, and it costs too much for mechanical work.
+  - GPT Astra, at very high effort: independent review. It reproduces problems by
+    running the code. It ignores CI unless told to look, and sometimes calls ordinary
+    behavior a blocker.
+  - Fable: reviewing changes that rewrite or delete stored data, and hard problems
+    where Opus's output misses the bar. It is expensive, so not for routine building.
+  - Haiku: fixed mechanical jobs and narrow lookups that need no judgement.
 - Those are defaults, not limits. If a model's output misses the bar, rerun it with a
   stronger one without asking. For anything that ships, quality comes before cost. If
   the user named a model and it is unavailable, say so rather than substituting.
-- Give a builder the whole job, including its tests. Its report is not verification:
-  judge the output, and have a reviewer that did not build it check anything that
-  ships, preferably on another provider's model.
+- Beyond a small fix, Opus plans, Sol builds, Opus reviews what it managed, and a
+  model that did not build it reviews independently, preferably on another provider.
+  A question of presentation or wording is a design task: mock a few options in the
+  real app on synthetic data, and build once the user has chosen one.
+- A brief is all a delegate knows. Give the goal and why, in the user's words where
+  you have them; what is already known and ruled out, with paths and PR numbers; the
+  smallest change that works alone; when to stop and report instead, such as needing
+  a migration; the checks and evidence required, including the ones CI runs; and
+  whether it may merge, which defaults to no. Ask for a report that leads with the
+  verdict and separates what was run from what was only read or left unverified.
 - Keep reviewers read-only, with no subagents of their own. Give them the intent, the
-  base commit, and what is out of scope, and ask for findings graded blocker, should,
-  or nit, with file and line. Do not edit the files under review while one runs, and
-  do not treat a timeout or missing reply as approval.
+  base commit, what is out of scope, and the failure modes to hunt. Tell them to check
+  CI state and to say what they would cut. Ask for findings graded blocker, should, or
+  nit, with file and line. Do not edit the files under review while one runs, and do
+  not treat a timeout or missing reply as approval.
 - Check each finding yourself. Make the smallest fix for what you agree with, decline
   nits and out-of-scope findings, and push back with evidence rather than agreeing to
-  end the loop. Start another round only for an open blocker or should, or changed
-  behavior, up to three rounds. Then show the user both sides of whatever is disputed.
-- Get the user's approval on the plan before multi-PR work starts.
+  end the loop. After fixing a blocker, have the fix reviewed too, since fixes often
+  introduce a new problem. Skip that only when the fix is narrow and ships with the
+  reviewer's reproduction as a test. After three rounds, show the user both sides of
+  whatever is disputed.
+- A delegate's report is not verification. Check a claim that matters before you
+  repeat it; one command is often enough. Subagents cannot watch CI, so check it on
+  the final head yourself before calling the work ready.
+- Give read-only research to a delegate, and give the follow-up build to the same one,
+  since it already has the context. Do not message an idle delegate just for the
+  record: every message costs a turn.
+- Get the user's approval on the plan before multi-PR work starts. The user merges
+  anything that touches stored data.
