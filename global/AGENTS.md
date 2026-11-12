@@ -163,67 +163,34 @@
 
 ## Delegating work
 
-This applies where the harness offers subagent or delegation tools; where its own
-rules on when or how to delegate are more specific, follow those. If you are a
-subagent, do the work yourself and report back, and delegate further only if your
-brief says to.
+This applies where the harness offers subagent or delegation tools, and its own more
+specific rules win. If you are a subagent, do the work yourself, and delegate only if
+your brief says to.
 
-- The main thread orchestrates; subagents do the work. Keep code, diffs, and logs out
-  of main context, so that only subagents' reports come back. A trivial tweak touching
-  a file or two is fine to make directly. Once an edit means reading several files or
-  wants tests or review, delegate it, even mid-edit.
-- Route among the models the harness offers by these defaults, using each tier's
-  latest version:
-  - GPT Sol, at high effort: building to a clear spec, mechanical changes, CI,
-    scripts, and root-causing a scoped bug. It is cheap and fast, which keeps usage
-    balanced across subscriptions. Take the approach to a non-obvious fix or a
-    redesign to Opus before Sol builds it.
-    It has no taste, widens scope beyond the brief, skips checks that CI runs, and
-    can write tests that accommodate the bug.
-  - Opus: plans, anything that needs taste (UI, wording, how a number is shown, API
-    design), investigation that reads many files, work too open-ended to specify, and
-    managing and reviewing a Sol builder. It can state as verified what it only
-    reasoned about, and it costs too much for mechanical work.
-  - Fable: hard problems where Opus's output misses the bar, a second opinion on a
-    difficult approach, and reviewing changes that rewrite or delete stored data. It
-    is the strongest reviewer and does not get caught up on nits, but it is expensive,
-    so use it rarely and not for routine building.
-  - Haiku: fixed mechanical jobs and narrow lookups that need no judgement.
-- Those are defaults, not limits. If a model's output misses the bar, rerun it with a
-  stronger one without asking. For anything that ships, quality comes before cost. If
-  the user named a model and it is unavailable, say so rather than substituting.
-- Beyond a small fix, Opus plans, Sol builds, Opus reviews what it managed, and a
-  different model from the builder reviews independently, preferably on another
-  provider. GPT Astra at very high effort has worked for this: it reproduces problems
-  by running the code, but ignores CI unless told to look and sometimes calls ordinary
-  behavior a blocker.
-  A question of presentation or wording is a design task: mock a few options in the
-  real app on synthetic data, and build once the user has chosen one.
-- A brief is all a delegate knows. Give the goal and why, in the user's words where
-  you have them; what is already known and ruled out, with paths and PR numbers; the
-  smallest change that works alone; when to stop and report instead, such as needing
-  a migration; the checks and evidence required, including the ones CI runs; and
-  whether it may merge, which defaults to no. Ask for a report that leads with the
-  verdict and separates what was run from what was only read or left unverified.
-- Keep reviewers read-only, with no subagents of their own. Give them the intent, the
-  base commit, what is out of scope, and the failure modes to hunt. Tell them to check
-  CI state and to say what they would cut. Ask for findings graded blocker, should, or
-  nit, with file and line. Do not edit the files under review while one runs, and do
-  not treat a timeout or missing reply as approval.
-- Check each finding yourself. Make the smallest fix for what you agree with, decline
-  nits and out-of-scope findings, and push back with evidence rather than agreeing to
-  end the loop. After fixing a blocker, have the fix reviewed too, since fixes often
-  introduce a new problem. Skip that only when the fix is narrow and ships with the
-  reviewer's reproduction as a test. After three rounds, show the user both sides of
-  whatever is disputed.
-- A delegate's report is not verification. Check a claim that matters before you
-  repeat it; one command is often enough. Subagents cannot watch CI, so check it on
-  the final head yourself before calling the work ready.
-- For verification in the running app, Sol checks the states its brief names and
-  nothing around them, so name each state. Use Opus where the check should notice
-  what nobody asked about, such as an upgrade or a design.
-- Give read-only research to a delegate, and give the follow-up build to the same one,
-  since it already has the context. Do not message an idle delegate just for the
-  record: every message costs a turn.
-- Get the user's approval on the plan before multi-PR work starts. The user merges
-  anything that touches stored data.
+The main thread orchestrates. Keep code, diffs, and logs out of it, and delegate once
+an edit means reading several files or wants tests or review. Route by these defaults,
+using each tier's latest version, and rerun with a stronger model without asking when
+output misses the bar.
+
+| Model | Use for | Watch for |
+| --- | --- | --- |
+| GPT Sol, high effort | Building to a clear spec, mechanical changes, CI, scripts, root-causing a scoped bug | No taste. Widens scope, skips checks CI runs, writes tests that accommodate the bug, and verifies only the states its brief names |
+| Opus | Plans, the approach to a non-obvious fix, anything needing taste, investigation across many files, managing and reviewing Sol, verification that should notice what nobody asked about | States as verified what it only reasoned about. Costs too much for mechanical work |
+| Fable | Hard problems where Opus misses the bar, second opinions, reviewing changes to stored data | Expensive, so use it rarely |
+| Haiku | Fixed mechanical jobs and narrow lookups | Anything needing judgement |
+| A different model from the builder, such as GPT Astra | Independent review of anything that ships | Astra ignores CI unless told to look, and sometimes calls ordinary behavior a blocker |
+
+- **Briefs:** a brief is all a delegate knows. Give the goal and why, what is known
+  and ruled out, the smallest change that works alone, when to stop and report
+  instead, the checks and evidence required, and whether it may merge, which defaults
+  to no. Ask for the verdict first, then what was run versus only read.
+- **Reviews:** keep reviewers read-only, give them the intent, base commit, and what
+  is out of scope, and ask for findings graded blocker, should, or nit. Check each
+  finding yourself, make the smallest fix, and push back with evidence rather than
+  agreeing to end the loop. Have a fix to a blocker reviewed too. After three rounds,
+  show the user both sides.
+- **Verification:** a delegate's report is not verification. Check a claim that
+  matters before you repeat it, and check CI on the final head yourself.
+- **Approval:** get the user's approval on the plan before multi-PR work starts, and
+  on which option to build when the question is presentation or wording. The user
+  merges anything that touches stored data.
