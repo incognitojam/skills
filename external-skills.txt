@@ -5,7 +5,6 @@
 # ./link.sh --external-skills or .\link.ps1 -ExternalSkills.
 
 https://github.com/anthropics/skills/tree/2c5958ecac7cee2b583967a2c4981d0f4a75c579 --skill frontend-design # ref=main
-https://github.com/clerk/skills/tree/c5d2c0d6c5b63243146b4893c875f6ebef55977c # ref=main
 https://github.com/cloudflare/skills/tree/6eb6c781aa9b6438e0c7307bd102788a75fe1a6d --skill cloudflare # ref=main
 https://github.com/doeixd/solid-skill/tree/d0b77a86435c9d6a180cc9e36112a8e5b850e4f3 --skill solid-js-1x-best-practices-and-api # ref=main
 https://github.com/github/gh-stack/tree/bd0a32504f9ae9f795875a9e6bb90ff7408fda08 --skill gh-stack # ref=main
