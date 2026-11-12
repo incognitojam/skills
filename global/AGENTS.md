@@ -219,6 +219,9 @@ brief says to.
 - A delegate's report is not verification. Check a claim that matters before you
   repeat it; one command is often enough. Subagents cannot watch CI, so check it on
   the final head yourself before calling the work ready.
+- For verification in the running app, Sol checks the states its brief names and
+  nothing around them, so name each state. Use Opus where the check should notice
+  what nobody asked about, such as an upgrade or a design.
 - Give read-only research to a delegate, and give the follow-up build to the same one,
   since it already has the context. Do not message an idle delegate just for the
   record: every message costs a turn.
