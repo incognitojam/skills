@@ -163,14 +163,9 @@
 
 ## Delegating work
 
-This applies where the harness offers subagent or delegation tools, and its own more
-specific rules win. If you are a subagent, do the work yourself, and delegate only if
-your brief says to.
-
-The main thread orchestrates. Keep code, diffs, and logs out of it, and delegate once
-an edit means reading several files or wants tests or review. Route by these defaults,
-using each tier's latest version, and rerun with a stronger model without asking when
-output misses the bar.
+Where the harness offers subagent or delegation tools, pick the model by these
+defaults, using each tier's latest version. Rerun with a stronger model without asking
+when output misses the bar.
 
 | Model | Use for | Watch for |
 | --- | --- | --- |
@@ -179,18 +174,3 @@ output misses the bar.
 | Fable | Hard problems where Opus misses the bar, second opinions, reviewing changes to stored data | Expensive, so use it rarely |
 | Haiku | Fixed mechanical jobs and narrow lookups | Anything needing judgement |
 | A different model from the builder, such as GPT Astra | Independent review of anything that ships | Astra ignores CI unless told to look, and sometimes calls ordinary behavior a blocker |
-
-- **Briefs:** a brief is all a delegate knows. Give the goal and why, what is known
-  and ruled out, the smallest change that works alone, when to stop and report
-  instead, the checks and evidence required, and whether it may merge, which defaults
-  to no. Ask for the verdict first, then what was run versus only read.
-- **Reviews:** keep reviewers read-only, give them the intent, base commit, and what
-  is out of scope, and ask for findings graded blocker, should, or nit. Check each
-  finding yourself, make the smallest fix, and push back with evidence rather than
-  agreeing to end the loop. Have a fix to a blocker reviewed too. After three rounds,
-  show the user both sides.
-- **Verification:** a delegate's report is not verification. Check a claim that
-  matters before you repeat it, and check CI on the final head yourself.
-- **Approval:** get the user's approval on the plan before multi-PR work starts, and
-  on which option to build when the question is presentation or wording. The user
-  merges anything that touches stored data.
