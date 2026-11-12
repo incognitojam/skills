@@ -174,25 +174,29 @@ brief says to.
   wants tests or review, delegate it, even mid-edit.
 - Route among the models the harness offers by these defaults, using each tier's
   latest version:
-  - GPT Sol, at high effort: building to a clear spec, mechanical changes, CI, and
-    scripts. It is cheap and fast, which keeps usage balanced across subscriptions.
+  - GPT Sol, at high effort: building to a clear spec, mechanical changes, CI,
+    scripts, and root-causing a scoped bug. It is cheap and fast, which keeps usage
+    balanced across subscriptions. Take the approach to a non-obvious fix or a
+    redesign to Opus before Sol builds it.
     It has no taste, widens scope beyond the brief, skips checks that CI runs, and
     can write tests that accommodate the bug.
   - Opus: plans, anything that needs taste (UI, wording, how a number is shown, API
     design), investigation that reads many files, work too open-ended to specify, and
     managing and reviewing a Sol builder. It can state as verified what it only
     reasoned about, and it costs too much for mechanical work.
-  - GPT Astra, at very high effort: independent review. It reproduces problems by
-    running the code. It ignores CI unless told to look, and sometimes calls ordinary
-    behavior a blocker.
-  - Fable: reviewing changes that rewrite or delete stored data, and hard problems
-    where Opus's output misses the bar. It is expensive, so not for routine building.
+  - Fable: hard problems where Opus's output misses the bar, a second opinion on a
+    difficult approach, and reviewing changes that rewrite or delete stored data. It
+    is the strongest reviewer and does not get caught up on nits, but it is expensive,
+    so use it rarely and not for routine building.
   - Haiku: fixed mechanical jobs and narrow lookups that need no judgement.
 - Those are defaults, not limits. If a model's output misses the bar, rerun it with a
   stronger one without asking. For anything that ships, quality comes before cost. If
   the user named a model and it is unavailable, say so rather than substituting.
 - Beyond a small fix, Opus plans, Sol builds, Opus reviews what it managed, and a
-  model that did not build it reviews independently, preferably on another provider.
+  different model from the builder reviews independently, preferably on another
+  provider. GPT Astra at very high effort has worked for this: it reproduces problems
+  by running the code, but ignores CI unless told to look and sometimes calls ordinary
+  behavior a blocker.
   A question of presentation or wording is a design task: mock a few options in the
   real app on synthetic data, and build once the user has chosen one.
 - A brief is all a delegate knows. Give the goal and why, in the user's words where
