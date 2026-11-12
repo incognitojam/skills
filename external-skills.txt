@@ -12,4 +12,4 @@ https://github.com/github/gh-stack/tree/bd0a32504f9ae9f795875a9e6bb90ff7408fda08
 https://github.com/humanlayer/skills/tree/4d69d20f6e9b57b4fcf0d501ccfb1be961f0f329 --skill show-me # ref=main
 https://github.com/khmm12/solidjs-v2-skills/tree/2533ed5c0149bdbad9b2a73bfeebaff12bdc8d11 # ref=main
 https://github.com/neondatabase/agent-skills/tree/2b0e2b6f56d2b41c5363049e30e6ab72aa260cce --skill neon neon-postgres # ref=main
-https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af --skill council sol-loop # ref=main
+https://github.com/t3dotgg/tstack/tree/11e37a74d0a6868c121cd0910ab2b3bd9873b92a --skill council sol-loop # ref=main
