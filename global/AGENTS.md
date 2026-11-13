@@ -163,14 +163,22 @@
 
 ## Delegating work
 
-Where the harness offers subagent or delegation tools, pick the model by these
-defaults, using each tier's latest version. Rerun with a stronger model without asking
-when output misses the bar.
+Where the harness offers subagent or delegation tools, pick the model from these
+ratings. Higher is better, and cost reflects subscription quotas, not list price.
 
-| Model | Use for | Watch for |
-| --- | --- | --- |
-| GPT Sol, high effort | Building to a clear spec, mechanical changes, CI, scripts, root-causing a scoped bug | No taste. Widens scope, skips checks CI runs, writes tests that accommodate the bug, and verifies only the states its brief names |
-| Opus | Plans, the approach to a non-obvious fix, anything needing taste, investigation across many files, managing and reviewing Sol, verification that should notice what nobody asked about | States as verified what it only reasoned about. Costs too much for mechanical work |
-| Fable | Hard problems where Opus misses the bar, second opinions, reviewing changes to stored data | Expensive, so use it rarely |
-| Haiku | Fixed mechanical jobs and narrow lookups | Anything needing judgement |
-| A different model from the builder, such as GPT Astra | Independent review of anything that ships | Astra ignores CI unless told to look, and sometimes calls ordinary behavior a blocker |
+| Model     | Cost | Intelligence | Taste |
+| --------- | ---- | ------------ | ----- |
+| Haiku     | 9    | 4            | 4     |
+| GPT Sol   | 8    | 7            | 4     |
+| GPT Astra | 6    | 9            | 5     |
+| Opus      | 4    | 9            | 8     |
+| Fable     | 2    | 10           | 9     |
+
+- Pick the cheapest model that clears the bar for the task. Mechanical work to a clear
+  spec needs little; a plan, a hard diagnosis, or anything user-facing needs high
+  intelligence or taste of 7 or more.
+- Have a different model from the builder review what ships, at the highest effort.
+- When a mistake cannot be undone, such as changing stored data or deleting files, get
+  two independent reviews, one from the strongest model, whatever the task's
+  difficulty.
+- Rerun with a stronger model without asking when output misses the bar.
