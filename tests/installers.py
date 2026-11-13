@@ -1,4 +1,5 @@
 import os
+import json
 import re
 from pathlib import Path
 import subprocess
@@ -103,18 +104,58 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
     handmade.mkdir()
     (handmade / 'SKILL.md').write_text('Synthetic handmade skill\n')
 
+    # Another detected universal agent used to keep canonical copies and lock entries alive.
+    (home / '.gemini').mkdir()
+    manual = repo / '.scratch' / 'manual'
+    manual.mkdir()
+    shutil.copytree(source / 'gamma', manual / 'manual-skill')
+    (manual / 'manual-skill' / 'SKILL.md').write_text('---\nname: manual-skill\ndescription: Synthetic manual skill.\n---\n')
+    manual_pin = fixture_remote(manual, 'https://github.com/example/manual')
+    for package in (manual_pin, f'{pinned} --skill gamma'):
+        subprocess.run(['npx', '--yes', 'skills@1.7.6', 'add', *package.split(),
+                        '--global', '--yes', '--json', '--agent', 'claude-code', 'codex'],
+                       cwd=repo, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                       shell=os.name == 'nt')
+    lock_path = Path(env['XDG_STATE_HOME']) / 'skills' / '.skill-lock.json'
+    applied = repo / '.git' / 'external-skills.applied.txt'
+
+    def lock_entries():
+        return json.loads(lock_path.read_text())['skills']
+
+    def add_locked(name, source):
+        lock = json.loads(lock_path.read_text())
+        lock['skills'][name] = dict(lock['skills']['manual-skill'], source=source)
+        lock_path.write_text(json.dumps(lock))
+
+    # Unrelated slash-containing names must never abort reconciliation.
+    add_locked('design/anthropic-design-canvas', 'example/unlisted')
     manifest = repo / 'external-skills.txt'
     manifest.write_bytes(f'# comment\r\n\r\n{pinned} --skill alpha beta # selections\r\n{other}\r\n'.encode())
-    install('--external-skills')
+    assert 'removed:' not in install('--external-skills')
+    assert applied.read_bytes() == manifest.read_bytes()
+    assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
+    assert 'manual-skill' in lock_entries()
+    assert 'design/anthropic-design-canvas' in lock_entries()
     for name in ('alpha', 'beta', 'delta'):
         for agent in ('.agents', '.claude'):
             assert (home / agent / 'skills' / name / 'SKILL.md').is_file()
-    assert not (home / '.agents' / 'skills' / 'gamma').exists()
+    assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
 
-    # Dropping a source removes only its recorded skills.
+    # A removable name unsafe for CLI invocation warns and leaves the baseline for retry.
+    add_locked('design/selected-canvas', 'example/other')
+    previous = applied.read_bytes()
+    # Dropping a source removes only its previously selected recorded skills.
     manifest.write_text(f'{pinned} --skill alpha beta\n')
     output = install('--external-skills')
     assert 'removed: delta (example/other)' in output
+    assert 'warning: skipping unsupported locked skill name: design/selected-canvas' in output
+    assert applied.read_bytes() == previous
+    assert 'delta' not in lock_entries()
+    lock = json.loads(lock_path.read_text())
+    del lock['skills']['design/selected-canvas']  # Remove only this synthetic unsupported fixture.
+    lock_path.write_text(json.dumps(lock))
+    assert 'removed:' not in install('--external-skills')
+    assert applied.read_bytes() == manifest.read_bytes()
     for agent in ('.agents', '.claude'):
         assert not (home / agent / 'skills' / 'delta').exists()
         assert (home / agent / 'skills' / 'beta' / 'SKILL.md').is_file()
@@ -123,10 +164,14 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
     manifest.write_text(f'{pinned} --skill alpha\n')
     output = install('--external-skills')
     assert 'removed: beta (example/skills)' in output
+    assert 'beta' not in lock_entries()
     for agent in ('.agents', '.claude'):
         assert not (home / agent / 'skills' / 'beta').exists()
         assert (home / agent / 'skills' / 'alpha' / 'SKILL.md').is_file()
     assert 'removed:' not in install('--external-skills')
+    assert (home / '.agents' / 'skills' / 'manual-skill' / 'SKILL.md').is_file()
+    assert 'manual-skill' in lock_entries()
+    assert 'design/anthropic-design-canvas' in lock_entries()
     assert (handmade / 'SKILL.md').read_text() == 'Synthetic handmade skill\n'
     for skill in (repo / 'skills').iterdir():
         for agent in ('.agents', '.claude'):
@@ -138,7 +183,9 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
 
     next_entry = f'{pinned} --skill beta'
     manifest.write_text(f'{pinned} --skill alpha missing\n{next_entry}\n')
+    previous = applied.read_bytes()
     output = install('--external-skills', expected=1)
+    assert applied.read_bytes() == previous
     assert f'installing: {next_entry}' not in output
     assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
 
@@ -151,7 +198,9 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
         assert (home / agent / 'skills' / 'alpha' / 'reference.txt').read_text() == 'Synthetic alpha reference.\n'
 
     manifest.write_text(f'{remote}/tree/{"0" * 40} --skill alpha # ref=main\n')
+    previous = applied.read_bytes()
     install('--external-skills', expected=1)
+    assert applied.read_bytes() == previous
 
     # Exercise the unattended post-merge path in a main checkout after a real pull.
     if os.name != 'nt':
@@ -166,6 +215,14 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
         subprocess.run(['git', 'clone', '-q', str(repo), str(checkout)], env=env, check=True)
         subprocess.run(['bash', './link.sh', '--external-skills'], cwd=checkout, env=env,
                        check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        hook_applied = checkout / '.git' / 'external-skills.applied.txt'
+        hook_previous = hook_applied.read_bytes()
+        manifest.write_text(f'{pinned} --skill alpha\n{remote}/tree/{"0" * 40} --skill alpha\n')
+        git('add', 'external-skills.txt', directory=repo)
+        git('commit', '-qm', 'Simulate a failing hook install', directory=repo)
+        subprocess.run(['git', 'pull', '--ff-only'], cwd=checkout, env=env, check=True)
+        assert hook_applied.read_bytes() == hook_previous
+        assert 'beta' in lock_entries() and 'delta' in lock_entries()
         manifest.write_text(f'{pinned} --skill alpha\n')
         git('add', 'external-skills.txt', directory=repo)
         git('commit', '-qm', 'Drop source and narrow selection', directory=repo)

@@ -8,8 +8,8 @@
 
 .PARAMETER ExternalSkills
     Also installs the third-party skills listed in external-skills.txt from the
-    registry. Needs network access and removes CLI-recorded skills the manifest no
-    longer selects for Claude Code and Codex.
+    registry. Needs network access and removes skills selected by the last successful
+    manifest but no longer selected.
 #>
 param([switch] $GlobalInstructions, [switch] $ExternalSkills)
 

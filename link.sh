@@ -12,7 +12,7 @@ usage() {
 	printf 'global/AGENTS.md for Claude Code and Codex without replacing existing files.\n'
 	printf 'With --external-skills, also installs the third-party skills listed in\n'
 	printf 'external-skills.txt from the registry. Installing needs network access and\n'
-	printf 'removes CLI-recorded skills the manifest no longer selects for Claude Code and Codex.\n'
+	printf 'removes skills selected by the last successful manifest but no longer selected.\n'
 }
 
 while [ "$#" -gt 0 ]; do
