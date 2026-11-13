@@ -12,7 +12,7 @@ usage() {
 	printf 'global/AGENTS.md for Claude Code and Codex without replacing existing files.\n'
 	printf 'With --external-skills, also installs the third-party skills listed in\n'
 	printf 'external-skills.txt from the registry. Installing needs network access and\n'
-	printf 'never removes skills that the manifest no longer lists.\n'
+	printf 'removes skills selected by the last successful manifest but no longer selected.\n'
 }
 
 while [ "$#" -gt 0 ]; do
@@ -146,4 +146,6 @@ if [ "$install_external_skills" = true ]; then
 		# JSON mode fails if any requested skill is missing, even when others match.
 		npx --yes skills@1.7.6 add "${package_args[@]}" --global --yes --json --agent claude-code codex
 	done 3<"$manifest"
+
+	node "$repo_root/scripts/prune-external-skills.mjs" "$manifest"
 fi

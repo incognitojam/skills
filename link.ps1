@@ -8,8 +8,8 @@
 
 .PARAMETER ExternalSkills
     Also installs the third-party skills listed in external-skills.txt from the
-    registry. Installing needs network access and never removes skills that the
-    manifest no longer lists.
+    registry. Needs network access and removes skills selected by the last successful
+    manifest but no longer selected.
 #>
 param([switch] $GlobalInstructions, [switch] $ExternalSkills)
 
@@ -95,5 +95,9 @@ if ($ExternalSkills) {
         if ($LASTEXITCODE -ne 0) {
             throw "Failed to install $package (exit code $LASTEXITCODE)."
         }
+    }
+    node "$repoRoot/scripts/prune-external-skills.mjs" "$repoRoot/external-skills.txt"
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to remove deselected external skills (exit code $LASTEXITCODE)."
     }
 }
