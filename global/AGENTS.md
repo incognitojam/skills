@@ -160,3 +160,25 @@
   suppresses the confirmation, and a merge scoped to one pull request still lands
   every unmerged layer below it. Run `gh stack view --json` first and state exactly
   which layers will land.
+
+## Delegating work
+
+Where the harness offers subagent or delegation tools, pick the model from these
+ratings. Higher is better, and cost reflects subscription quotas, not list price.
+
+| Model     | Cost | Intelligence | Taste |
+| --------- | ---- | ------------ | ----- |
+| Haiku     | 9    | 4            | 4     |
+| GPT Sol   | 8    | 7            | 4     |
+| GPT Astra | 6    | 9            | 5     |
+| Opus      | 4    | 9            | 8     |
+| Fable     | 2    | 10           | 9     |
+
+- Pick the cheapest model that clears the bar for the task. Mechanical work to a clear
+  spec needs little; a plan, a hard diagnosis, or anything user-facing needs high
+  intelligence or taste of 7 or more.
+- Have a different model from the builder review what ships.
+- When a mistake cannot be undone, such as changing stored data or deleting files, get
+  two independent reviews, one from the strongest model, whatever the task's
+  difficulty.
+- Rerun with a stronger model without asking when output misses the bar.
