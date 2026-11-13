@@ -177,7 +177,7 @@ ratings. Higher is better, and cost reflects subscription quotas, not list price
 - Pick the cheapest model that clears the bar for the task. Mechanical work to a clear
   spec needs little; a plan, a hard diagnosis, or anything user-facing needs high
   intelligence or taste of 7 or more.
-- Have a different model from the builder review what ships, at the highest effort.
+- Have a different model from the builder review what ships.
 - When a mistake cannot be undone, such as changing stored data or deleting files, get
   two independent reviews, one from the strongest model, whatever the task's
   difficulty.
