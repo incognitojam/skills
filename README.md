@@ -30,7 +30,7 @@ Personal cross-repository instructions are tracked separately in [`global/AGENTS
 
 This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing files and unrelated links at either location are reported and left unchanged, so the default installers remain portable for people with their own global instructions. On Windows, skill directories use junctions; global instruction files use symbolic links with a hard-link fallback.
 
-`link.sh` also sets `core.hooksPath` so that pulling `main` into the main checkout reruns `./link.sh --external-skills` on macOS and Linux. This refreshes personal links and installs the committed external skill revisions, so pulls need npx and network access. Edits to existing personal skills are visible immediately through their symlinks.
+`link.sh` also sets `core.hooksPath` so that pulling `main` into the main checkout reruns `./link.sh --external-skills` on macOS and Linux. This refreshes personal links, installs the committed external skill revisions, and removes deselected external skills, so pulls need npx and network access. Edits to existing personal skills are visible immediately through their symlinks.
 
 ## Skills
 
@@ -55,7 +55,7 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 
 Each manifest line pins a GitHub repository to a full commit SHA, optionally followed by `--skill name ...` to select skills. The `# ref=...` comment tells Renovate which branch to track; installations use the pinned commit. Keep selections from the same repository on one line so the CLI fetches it once. Arguments are whitespace-separated; shell quoting is not supported.
 
-Rerunning installs the committed revisions and picks up new manifest entries. Renovate proposes source updates weekly with links to the upstream commit comparisons; review and merge an update, then rerun the installer to use it. Automerge is disabled. To drop a skill, delete its selection from the manifest and run `npx skills remove <skill> -g`. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+Rerunning installs the committed revisions and picks up new manifest entries. Renovate proposes source updates weekly with links to the upstream commit comparisons; review and merge an update, then rerun the installer to use it. Automerge is disabled. To drop a skill, delete its selection (or its whole source line) from the manifest and rerun the installer with the external-skills option. After successful installs, it removes globally CLI-recorded skills the manifest no longer selects for Claude Code and Codex. Unrecorded directories and personal skill links are left alone. This also removes skills installed by hand with the Skills CLI from sources absent from the manifest on the next run. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
 
 | Source | Skills | Comment |
 | --- | --- | --- |

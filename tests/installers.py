@@ -23,13 +23,18 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
     repo = Path(temporary)
     for name in ('link.sh', 'link.ps1'):
         shutil.copy2(source_repo / name, repo / name)
-    for name in ('skills', 'global'):
+    for name in ('skills', 'global', 'scripts', '.githooks'):
         shutil.copytree(source_repo / name, repo / name)
     subprocess.run(['git', 'init', '-q', str(repo)], check=True)
     home = repo / '.scratch' / 'home'
     home.mkdir(parents=True)
+    cli_temporary = repo / '.scratch' / 'cli-tmp'
+    cli_temporary.mkdir()
     env = dict(os.environ, HOME=str(home), USERPROFILE=str(home),
-               INSTALLER_TEST_HOME=str(home), DO_NOT_TRACK='1')
+               INSTALLER_TEST_HOME=str(home), DO_NOT_TRACK='1', TMPDIR=str(cli_temporary),
+               XDG_STATE_HOME=str(home / '.local' / 'state'),
+               XDG_CONFIG_HOME=str(home / '.config'),
+               GIT_CONFIG_GLOBAL=str(repo / '.scratch' / 'gitconfig'))
 
     def install(*flags, expected=0):
         if os.name == 'nt':
@@ -73,43 +78,103 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
         skill.mkdir(parents=True)
         (skill / 'SKILL.md').write_text(f'---\nname: {name}\ndescription: Synthetic CI skill.\n---\n')
         (skill / 'reference.txt').write_text(f'Synthetic {name} reference.\n')
+    def git(*args, directory=source):
+        return subprocess.check_output(['git', '-C', str(directory), *args], env=env,
+                                       encoding='utf-8').strip()
+
+    def fixture_remote(directory, remote):
+        git('init', '-q', directory=directory)
+        git('config', 'user.name', 'Fixture Author', directory=directory)
+        git('config', 'user.email', 'fixture@example.invalid', directory=directory)
+        git('add', '.', directory=directory)
+        git('commit', '-qm', 'Initial synthetic skills', directory=directory)
+        revision = git('rev-parse', 'HEAD', directory=directory)
+        git('config', '--global', f'url.{directory.as_uri()}.insteadOf', remote + '.git')
+        return f'{remote}/tree/{revision}'
+
+    remote = 'https://github.com/example/skills'
+    pinned = fixture_remote(source, remote)
+    second = repo / '.scratch' / 'second'
+    second.mkdir()
+    shutil.copytree(source / 'gamma', second / 'delta')
+    (second / 'delta' / 'SKILL.md').write_text('---\nname: delta\ndescription: Synthetic CI skill.\n---\n')
+    other = fixture_remote(second, 'https://github.com/example/other')
+    handmade = home / '.agents' / 'skills' / 'handmade'
+    handmade.mkdir()
+    (handmade / 'SKILL.md').write_text('Synthetic handmade skill\n')
+
     manifest = repo / 'external-skills.txt'
-    manifest.write_bytes(f'# comment\r\n\r\n{source.as_posix()} --skill alpha beta # selections\r\n'.encode())
+    manifest.write_bytes(f'# comment\r\n\r\n{pinned} --skill alpha beta # selections\r\n{other}\r\n'.encode())
     install('--external-skills')
-    for name in ('alpha', 'beta'):
+    for name in ('alpha', 'beta', 'delta'):
         for agent in ('.agents', '.claude'):
-            assert (home / agent / 'skills' / name / 'reference.txt').read_text() == f'Synthetic {name} reference.\n'
+            assert (home / agent / 'skills' / name / 'SKILL.md').is_file()
     assert not (home / '.agents' / 'skills' / 'gamma').exists()
 
-    manifest.write_text(source.as_posix())  # Whole repo, without a final newline.
+    # Dropping a source removes only its recorded skills.
+    manifest.write_text(f'{pinned} --skill alpha beta\n')
+    output = install('--external-skills')
+    assert 'removed: delta (example/other)' in output
+    for agent in ('.agents', '.claude'):
+        assert not (home / agent / 'skills' / 'delta').exists()
+        assert (home / agent / 'skills' / 'beta' / 'SKILL.md').is_file()
+
+    # Narrowing a selection prunes only the deselected skill; reruns are inert.
+    manifest.write_text(f'{pinned} --skill alpha\n')
+    output = install('--external-skills')
+    assert 'removed: beta (example/skills)' in output
+    for agent in ('.agents', '.claude'):
+        assert not (home / agent / 'skills' / 'beta').exists()
+        assert (home / agent / 'skills' / 'alpha' / 'SKILL.md').is_file()
+    assert 'removed:' not in install('--external-skills')
+    assert (handmade / 'SKILL.md').read_text() == 'Synthetic handmade skill\n'
+    for skill in (repo / 'skills').iterdir():
+        for agent in ('.agents', '.claude'):
+            assert (home / agent / 'skills' / skill.name).samefile(skill)
+
+    manifest.write_text(pinned)  # Whole repo, without a final newline.
     install('--external-skills')
     assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
 
-    next_entry = f'{source.as_posix()} --skill beta'
-    manifest.write_text(f'{source.as_posix()} --skill alpha missing\n{next_entry}\n')
+    next_entry = f'{pinned} --skill beta'
+    manifest.write_text(f'{pinned} --skill alpha missing\n{next_entry}\n')
     output = install('--external-skills', expected=1)
     assert f'installing: {next_entry}' not in output
+    assert (home / '.agents' / 'skills' / 'gamma' / 'SKILL.md').is_file()
 
     # A pinned GitHub URL must keep installing the old commit after its branch moves.
-    def git(*args):
-        return subprocess.check_output(['git', '-C', str(source), *args], env=env,
-                                       encoding='utf-8').strip()
-
-    git('init', '-q')
-    git('config', 'user.name', 'Fixture Author')
-    git('config', 'user.email', 'fixture@example.invalid')
-    git('add', '.')
-    git('commit', '-qm', 'Initial synthetic skills')
-    revision = git('rev-parse', 'HEAD')
     (source / 'alpha' / 'reference.txt').write_text('New branch content\n')
     git('commit', '-qam', 'Move the branch ahead of the pin')
-    env['GIT_CONFIG_GLOBAL'] = str(repo / '.scratch' / 'gitconfig')
-    remote = 'https://github.com/example/skills'
-    git('config', '--global', f'url.{source.as_uri()}.insteadOf', remote + '.git')
-    manifest.write_text(f'{remote}/tree/{revision} --skill alpha # ref=main\n')
+    manifest.write_text(f'{pinned} --skill alpha # ref=main\n')
     install('--external-skills')
     for agent in ('.agents', '.claude'):
         assert (home / agent / 'skills' / 'alpha' / 'reference.txt').read_text() == 'Synthetic alpha reference.\n'
 
     manifest.write_text(f'{remote}/tree/{"0" * 40} --skill alpha # ref=main\n')
     install('--external-skills', expected=1)
+
+    # Exercise the unattended post-merge path in a main checkout after a real pull.
+    if os.name != 'nt':
+        manifest.write_text(f'{pinned} --skill alpha beta\n{other}\n')
+        git('branch', '-M', 'main', directory=repo)
+        git('config', 'user.name', 'Fixture Author', directory=repo)
+        git('config', 'user.email', 'fixture@example.invalid', directory=repo)
+        git('add', 'link.sh', 'link.ps1', 'scripts', 'skills', 'global', '.githooks',
+            'external-skills.txt', directory=repo)
+        git('commit', '-qm', 'Initial installer fixture', directory=repo)
+        checkout = repo / '.scratch' / 'hook-checkout'
+        subprocess.run(['git', 'clone', '-q', str(repo), str(checkout)], env=env, check=True)
+        subprocess.run(['bash', './link.sh', '--external-skills'], cwd=checkout, env=env,
+                       check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        manifest.write_text(f'{pinned} --skill alpha\n')
+        git('add', 'external-skills.txt', directory=repo)
+        git('commit', '-qm', 'Drop source and narrow selection', directory=repo)
+        subprocess.run(['git', 'pull', '--ff-only'], cwd=checkout, env=env, check=True)
+        for agent in ('.agents', '.claude'):
+            assert (home / agent / 'skills' / 'alpha' / 'SKILL.md').is_file()
+            for name in ('beta', 'delta'):
+                assert not (home / agent / 'skills' / name).exists()
+            for skill in (checkout / 'skills').iterdir():
+                assert (home / agent / 'skills' / skill.name).samefile(skill)
+        assert (handmade / 'SKILL.md').is_file()
+        print('Hook pull on main removed beta/delta and preserved alpha, handmade, and personal links.')
