@@ -144,7 +144,7 @@ if [ "$install_external_skills" = true ]; then
 
 		printf 'installing: %s\n' "$package"
 		# JSON mode fails if any requested skill is missing, even when others match.
-		npx --yes skills@1.7.6 add "${package_args[@]}" --global --yes --json --agent claude-code codex
+		npx --yes skills@1.8.1 add "${package_args[@]}" --global --yes --json --agent claude-code codex
 	done 3<"$manifest"
 
 	node "$repo_root/scripts/prune-external-skills.mjs" "$manifest"
