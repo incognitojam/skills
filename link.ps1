@@ -51,6 +51,11 @@ function Add-FileLinkIfAbsent($source, $target) {
     Write-Output "linked: $target -> $source"
 }
 
+# Keep links current after each pull. Outside a clone, there is nothing to pull.
+if ((Test-Path -LiteralPath "$repoRoot\.git") -and (Get-Command git -ErrorAction SilentlyContinue)) {
+    git -C $repoRoot config core.hooksPath .githooks
+}
+
 Get-ChildItem "$repoRoot\skills" -Directory | ForEach-Object {
     Add-Junction $_.FullName "$HOME\.claude\skills\$($_.Name)"
     # Codex and the other agents read ~/.agents/skills.
