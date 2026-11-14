@@ -89,6 +89,9 @@
   and what someone sees in each, rather than paragraphs of implementation. Leave
   constants, limits, and field, function, and test names in the code unless a
   reviewer needs one to judge the change or believe a claim.
+- Where it helps the reader, show a change or issue in code: a minimal example of
+  its behavior before and after, or an annotated call path when a bug's cause sits
+  a few calls away from where it shows up.
 - Upload PR evidence with `gh pr edit --attach`.
 - When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
   arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
