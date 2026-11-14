@@ -6,4 +6,11 @@
 [ "$(git rev-parse --git-dir)" = "$(git rev-parse --git-common-dir)" ] || exit 0
 [ "$(git branch --show-current)" = main ] || exit 0
 
-exec "$(git rev-parse --show-toplevel)/link.sh" --external-skills >/dev/null
+top=$(git rev-parse --show-toplevel)
+case "$(uname -s)" in
+MINGW* | MSYS* | CYGWIN*)
+	# Git for Windows runs hooks in its own shell, where ln -s copies instead of linking.
+	exec powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$top/link.ps1" -ExternalSkills >/dev/null
+	;;
+esac
+exec "$top/link.sh" --external-skills >/dev/null
