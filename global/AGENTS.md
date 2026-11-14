@@ -84,6 +84,11 @@
   encountered during development unless they help reviewers understand or assess
   the final change. Update the description when scope changes so it reflects the
   final result.
+- Write the description so a reviewer can decide from its first screen: the problem
+  in a sentence or two, then what happens now as a short list or table of situations
+  and what someone sees in each, rather than paragraphs of implementation. Leave
+  constants, limits, and field, function, and test names in the code unless a
+  reviewer needs one to judge the change or believe a claim.
 - Upload PR evidence with `gh pr edit --attach`.
 - When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
   arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
