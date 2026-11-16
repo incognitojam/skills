@@ -7,6 +7,8 @@ import shutil
 import tempfile
 
 source_repo = Path(__file__).resolve().parents[1]
+# Install with the CLI version the installers pin. Renovate updates it there, not in tests/.
+skills_cli = re.search(r'\bskills@\d+\.\d+\.\d+\b', (source_repo / 'link.sh').read_text()).group()
 # Keep new manifest entries from silently reintroducing moving source revisions.
 for line in (source_repo / 'external-skills.txt').read_text().splitlines():
     entry = line.split('#', 1)[0].strip()
@@ -112,7 +114,7 @@ with tempfile.TemporaryDirectory(prefix='installers-', dir=scratch) as temporary
     (manual / 'manual-skill' / 'SKILL.md').write_text('---\nname: manual-skill\ndescription: Synthetic manual skill.\n---\n')
     manual_pin = fixture_remote(manual, 'https://github.com/example/manual')
     for package in (manual_pin, f'{pinned} --skill gamma'):
-        subprocess.run(['npx', '--yes', 'skills@1.7.6', 'add', *package.split(),
+        subprocess.run(['npx', '--yes', skills_cli, 'add', *package.split(),
                         '--global', '--yes', '--json', '--agent', 'claude-code', 'codex'],
                        cwd=repo, env=env, check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                        shell=os.name == 'nt')
