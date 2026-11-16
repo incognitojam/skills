@@ -20,13 +20,29 @@
       "datasourceTemplate": "custom.github-folder",
       "registryUrlTemplate": "https://api.github.com/repos/{{{depName}}}/commits?sha={{{currentValue}}}&path={{{path}}}&per_page=1",
       "versioningTemplate": "exact"
+    },
+    {
+      "customType": "regex",
+      "description": "Check that each skill's folder still exists on its branch. The commit lookup above keeps finding the commit that moved or deleted a folder, so this lookup fails instead, which flags the stale path on the Dependency Dashboard and in Renovate's pull requests",
+      "managerFilePatterns": ["/^external-skills\\.txt$/"],
+      "matchStrings": ["https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/tree/[a-f0-9]{40}[^\\r\\n]*# ref=(?<currentValue>\\S+)[ \\t]+path=(?<path>\\S+)"],
+      "packageNameTemplate": "{{{depName}}}/{{{path}}}",
+      "datasourceTemplate": "custom.github-folder-exists",
+      "registryUrlTemplate": "https://api.github.com/repos/{{{depName}}}/contents/{{{path}}}?ref={{{currentValue}}}",
+      "versioningTemplate": "exact"
     }
   ],
   "customDatasources": {
     "github-folder": {
-      "description": "The newest commit that changed a folder. An empty result, such as for a folder that moved, fails the lookup instead of offering nothing",
+      "description": "The newest commit that changed a folder. A folder with no history, such as a misspelt path, fails the lookup instead of offering nothing",
       "transformTemplates": [
         "$count($) > 0 ? {\"releases\": [{\"version\": \"{{{currentValue}}}\", \"digest\": $[0].sha, \"releaseTimestamp\": $[0].commit.committer.date}], \"sourceUrl\": \"https://github.com/{{{packageName}}}\"} : {}"
+      ]
+    },
+    "github-folder-exists": {
+      "description": "The branch itself, offered only while the folder exists on it, so the lookup never proposes an update but fails once the folder is gone",
+      "transformTemplates": [
+        "{\"releases\": [{\"version\": \"{{{currentValue}}}\"}]}"
       ]
     }
   },
