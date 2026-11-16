@@ -7,7 +7,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^link\\.(sh|ps1)$/"],
+      "description": "Update every Skills CLI pin together, so installs and removals run the same version. The installer tests read theirs from link.sh, since Renovate ignores tests/",
+      "managerFilePatterns": ["/^link\\.(sh|ps1)$/", "/^scripts/prune-external-skills\\.mjs$/"],
       "matchStrings": ["\\bskills@(?<currentValue>\\d+\\.\\d+\\.\\d+)\\b"],
       "depNameTemplate": "skills",
       "datasourceTemplate": "npm"
