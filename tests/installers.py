@@ -8,7 +8,9 @@ import tempfile
 
 source_repo = Path(__file__).resolve().parents[1]
 # Install with the CLI version the installers pin. Renovate updates it there, not in tests/.
-skills_cli = re.search(r'\bskills@\d+\.\d+\.\d+\b', (source_repo / 'link.sh').read_text()).group()
+skills_cli = re.search(r'\bskills@\d+\.\d+\.\d+\b', (source_repo / 'link.sh').read_text())
+assert skills_cli, 'link.sh no longer pins the Skills CLI as skills@<major>.<minor>.<patch>'
+skills_cli = skills_cli.group()
 # Keep new manifest entries from silently reintroducing moving source revisions.
 for line in (source_repo / 'external-skills.txt').read_text().splitlines():
     entry = line.split('#', 1)[0].strip()
