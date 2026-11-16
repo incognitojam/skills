@@ -4,7 +4,7 @@
 # Arguments are whitespace-separated, without shell quoting. Install with
 # ./link.sh --external-skills or .\link.ps1 -ExternalSkills.
 
-https://github.com/anthropics/skills/tree/2c5958ecac7cee2b583967a2c4981d0f4a75c579 --skill frontend-design # ref=main
+https://github.com/anthropics/skills/tree/e4bb5d960d87126ff3b3a8af1a104b7db67560ba --skill frontend-design # ref=main
 https://github.com/cloudflare/skills/tree/cbf893b954222276bf1af57e5f23379231e0efb9 --skill cloudflare # ref=main
 https://github.com/doeixd/solid-skill/tree/d0b77a86435c9d6a180cc9e36112a8e5b850e4f3 --skill solid-js-1x-best-practices-and-api # ref=main
 https://github.com/github/gh-stack/tree/bd0a32504f9ae9f795875a9e6bb90ff7408fda08 --skill gh-stack # ref=main
