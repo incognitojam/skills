@@ -1,12 +1,12 @@
 # Third-party skills installed with the Skills CLI.
-# One pinned GitHub URL per line, with optional --skill selections.
-# The # ref= comment names the branch Renovate tracks, and path= the folder
-# whose changes it proposes; installs use the SHA. A line has one folder, so
-# give each selected skill its own line, or a line selecting a whole
-# repository the folder that holds all its skills. Without path=, Renovate
-# follows every commit on the branch. Arguments are whitespace-separated,
-# without shell quoting. Install with ./link.sh --external-skills or
-# .\link.ps1 -ExternalSkills.
+# One GitHub tree URL per line, pinned to a full commit SHA, with optional
+# --skill selections. The # ref= comment names the branch Renovate tracks,
+# and path= the folder whose changes it proposes; installs use the SHA.
+# A line has one path=, so give each selected skill its own line. A line
+# that installs a whole repository takes the folder holding all its skills.
+# Without path=, Renovate follows every commit on the branch. Arguments are
+# whitespace-separated, without shell quoting. Install with
+# ./link.sh --external-skills or .\link.ps1 -ExternalSkills.
 
 https://github.com/anthropics/skills/tree/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f --skill frontend-design # ref=main path=skills/frontend-design
 https://github.com/cloudflare/skills/tree/6eb6c781aa9b6438e0c7307bd102788a75fe1a6d --skill cloudflare # ref=main path=skills/cloudflare

@@ -12,11 +12,11 @@ Personal agent skills shared across Claude Code and Codex. Install them with the
 .\link.ps1
 ```
 
-Each `skills/<name>/` directory is linked into `~/.claude/skills/` and into `~/.agents/skills/`, which Codex and the other agents read. Links left behind by skills removed from this repository are deleted; other links are left alone.
+Each `skills/<name>/` directory is linked into `~/.claude/skills/` and into `~/.agents/skills/`, which Codex and the other agents read. Edits to a skill here take effect immediately through its link. Links left behind by skills removed from this repository are deleted; other links are left alone.
 
 Personal cross-repository instructions live in [`global/AGENTS.md`](global/AGENTS.md). `./link.sh --global-instructions` or `.\link.ps1 -GlobalInstructions` links them as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, leaving an existing file at either location alone.
 
-The installers also set a Git hook so that pulling `main` reruns them with the external-skills option below, so pulls need npx and network access. Run `./link.sh --help` or `Get-Help .\link.ps1` for the options.
+The installers also set a Git hook: pulling `main` in the main checkout reruns the installer with the external-skills option described below, so pulls need npx and network access. Run `./link.sh --help` or `Get-Help .\link.ps1 -Detailed` for the options.
 
 ## Skills
 
@@ -39,9 +39,9 @@ Third-party skills from the [open skills registry](https://skills.sh/), installe
 .\link.ps1 -ExternalSkills
 ```
 
-- **Add** a skill with a line in the manifest, in the format its header describes. Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it, and prefer sources with a track record.
-- **Update** by merging Renovate's weekly pull requests, which appear only when a skill's folder changes upstream and link to the upstream comparison. Pulling `main` then installs the new revision. If a folder moves upstream, the Dependency Dashboard warns until its `path=` is updated.
-- **Remove** a skill by deleting its selection or its line. The next install removes skills the last installed manifest selected and this one doesn't. Skills installed by hand from other sources are left alone.
+- **Add** a skill with a line in the manifest, in the format its header describes, and a row in the table below. Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it, and prefer sources with a track record.
+- **Update** by merging Renovate's weekly pull requests, which appear only when a skill's folder changes upstream and link to the upstream comparison. Pulling `main` then installs the new revision. If a folder moves or is deleted upstream, the Dependency Dashboard warns until the line's `path=` is updated.
+- **Remove** a skill by deleting its line from the manifest and its entry in the table below. The next install, which pulling `main` runs for you, uninstalls any skill that the previous manifest selected and the current one no longer does. Skills installed by hand from other sources are left alone.
 
 `npx skills list -g` shows what is installed and where each skill came from.
 
