@@ -12,25 +12,11 @@ Personal agent skills shared across Claude Code and Codex. Install them with the
 .\link.ps1
 ```
 
-The scripts link them into place as follows:
+Each `skills/<name>/` directory is linked into `~/.claude/skills/` and into `~/.agents/skills/`, which Codex and the other agents read. Edits to a skill here take effect immediately through its link. Links left behind by skills removed from this repository are deleted; other links are left alone.
 
-- All `skills/<name>/` directories are linked into `~/.claude/skills/`.
-- Each is also linked into `~/.agents/skills/`, which Codex and the other agents read.
-- Links left behind by skills removed from this repository are deleted. Other links are left alone.
+Personal cross-repository instructions live in [`global/AGENTS.md`](global/AGENTS.md). `./link.sh --global-instructions` or `.\link.ps1 -GlobalInstructions` links them as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`, leaving an existing file at either location alone.
 
-Personal cross-repository instructions are tracked separately in [`global/AGENTS.md`](global/AGENTS.md). Install them explicitly with:
-
-```sh
-./link.sh --global-instructions
-```
-
-```powershell
-.\link.ps1 -GlobalInstructions
-```
-
-This links the same file as `~/.claude/CLAUDE.md` and `~/.codex/AGENTS.md`. Existing files and unrelated links at either location are reported and left unchanged, so the default installers remain portable for people with their own global instructions. On Windows, skill directories use junctions; global instruction files use symbolic links with a hard-link fallback.
-
-Both installers also set `core.hooksPath` so that pulling `main` into the main checkout reruns the installer with the external-skills option: `./link.sh --external-skills` on macOS and Linux, and `.\link.ps1 -ExternalSkills` on Windows. This refreshes personal links, installs the committed external skill revisions, and removes deselected external skills, so pulls need npx and network access. Edits to existing personal skills are visible immediately through their symlinks.
+The installers also set a Git hook: pulling `main` in the main checkout reruns the installer with the external-skills option described below, so pulls need npx and network access. Run `./link.sh --help` or `Get-Help .\link.ps1 -Detailed` for the options.
 
 ## Skills
 
@@ -43,7 +29,7 @@ Both installers also set `core.hooksPath` so that pulling `main` into the main c
 
 ## Installed skills
 
-Third-party skills installed from the [open skills registry](https://skills.sh/) with the Skills CLI. Their files live outside this repository, under `~/.agents/skills/` or `~/.claude/skills/`, but the set is tracked here in [`external-skills.txt`](external-skills.txt). Install every skill in that manifest on a new machine with:
+Third-party skills from the [open skills registry](https://skills.sh/), installed with the Skills CLI at the revisions pinned in [`external-skills.txt`](external-skills.txt). Install them all on a new machine with:
 
 ```sh
 ./link.sh --external-skills
@@ -53,17 +39,19 @@ Third-party skills installed from the [open skills registry](https://skills.sh/)
 .\link.ps1 -ExternalSkills
 ```
 
-Each manifest line pins a GitHub repository to a full commit SHA, optionally followed by `--skill name ...` to select skills. The `# ref=... path=...` comment tells Renovate which branch to track and which folder holds the skill, so it proposes an update only when that folder changes rather than on every commit to the repository; installations use the pinned commit. Give each selected skill its own line with its own `path=`, since a line has a single folder, and give a line installing every skill in a repository the folder that holds them all. A line without `path=` follows every commit on the branch. Arguments are whitespace-separated; shell quoting is not supported.
+- **Add** a skill with a line in the manifest, in the format its header describes, and a row in the table below. Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it, and prefer sources with a track record.
+- **Update** by merging Renovate's weekly pull requests, which appear only when a skill's folder changes upstream and link to the upstream comparison. Pulling `main` then installs the new revision. If a folder moves or is deleted upstream, the Dependency Dashboard warns until the line's `path=` is updated.
+- **Remove** a skill by deleting its line from the manifest and its entry in the table below. The next install, which pulling `main` runs for you, uninstalls any skill that the previous manifest selected and the current one no longer does. Skills installed by hand from other sources are left alone.
 
-Rerunning installs the committed revisions and picks up new manifest entries. Renovate proposes source updates weekly, pinned to the last commit that changed each skill's folder, with links to the upstream commit comparisons. If a skill's folder moves or is deleted upstream, Renovate may still propose the commit that moved it, but a failed lookup on the Dependency Dashboard and a warning on each Renovate pull request flag it until its `path=` is updated; review and merge an update, then rerun the installer to use it. Automerge is disabled. To drop a skill, delete its selection (or its whole source line) from the manifest and rerun the installer with the external-skills option. After successful installs, it removes globally CLI-recorded skills selected by the previously applied manifest but no longer selected by the current one. Removal applies to all agents because some share the same skill directory with Codex. Hand-installed skills from sources outside the applied manifest, unrecorded directories, and personal skill links are left alone. The first run removes nothing. Each fully successful run atomically saves the manifest as `external-skills.applied.txt` inside this checkout’s Git directory (resolved with `git rev-parse --absolute-git-dir`), outside tracked files. Failed or skipped removals keep the previous snapshot for a later retry; using `ORIG_HEAD` instead would lose that baseline after subsequent pulls. `npx skills list -g` reports what is installed and where each skill came from. Run `./link.sh --help` or `Get-Help .\link.ps1` for what the flags do.
+`npx skills list -g` shows what is installed and where each skill came from.
 
 | Source | Skills | Comment |
 | --- | --- | --- |
 | [`anthropics/skills`](https://skills.sh/anthropics/skills) | `frontend-design` |
+| [`cloudflare/skills`](https://skills.sh/cloudflare/skills) | `cloudflare` |
 | [`doeixd/solid-skill`](https://skills.sh/doeixd/solid-skill) | `solid-js-1x-best-practices-and-api` |
 | [`github/gh-stack`](https://skills.sh/github/gh-stack) | `gh-stack` |
 | [`humanlayer/skills`](https://skills.sh/humanlayer/skills) | `show-me` | Simplify explanations and diffs https://x.com/mattpocockuk/status/2095460192871698728 |
 | [`khmm12/solidjs-v2-skills`](https://skills.sh/khmm12/solidjs-v2-skills) | `solidjs-v2`, `solidjs-v2-migration`, `solidjs-v2-reviewer` |
+| [`neondatabase/agent-skills`](https://skills.sh/neondatabase/agent-skills) | `neon`, `neon-postgres` |
 | [`t3dotgg/tstack`](https://github.com/t3dotgg/tstack) | `council`, `sol-loop` | Cross-provider review loops, run when you ask for them by name |
-
-Skills run with full agent permissions, so read a skill's `SKILL.md` before adding it to the manifest, and prefer sources with a track record.
