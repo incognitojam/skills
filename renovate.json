@@ -1,8 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>incognitojam/renovate-config",
-    "helpers:githubDigestChangelogs"
+    "github>incognitojam/renovate-config"
   ],
   "automerge": false,
   "customManagers": [
@@ -15,18 +14,33 @@
     },
     {
       "customType": "regex",
+      "description": "Pin each external skill to the last commit on its branch that changed its folder, so commits elsewhere in the repository don't propose an update",
       "managerFilePatterns": ["/^external-skills\\.txt$/"],
-      "matchStrings": ["https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/tree/(?<currentDigest>[a-f0-9]{40})[^\\r\\n]*# ref=(?<currentValue>\\S+)"],
-      "datasourceTemplate": "git-refs",
-      "packageNameTemplate": "https://github.com/{{{depName}}}",
+      "matchStrings": ["https://github\\.com/(?<depName>[\\w.-]+/[\\w.-]+)/tree/(?<currentDigest>[a-f0-9]{40})[^\\r\\n]*# ref=(?<currentValue>\\S+)(?:[ \\t]+path=(?<path>\\S+))?"],
+      "datasourceTemplate": "custom.github-folder",
+      "registryUrlTemplate": "https://api.github.com/repos/{{{depName}}}/commits?sha={{{currentValue}}}&path={{{path}}}&per_page=1",
       "versioningTemplate": "exact"
     }
   ],
+  "customDatasources": {
+    "github-folder": {
+      "description": "The newest commit that changed a folder. An empty result, such as for a folder that moved, fails the lookup instead of offering nothing",
+      "transformTemplates": [
+        "$count($) > 0 ? {\"releases\": [{\"version\": \"{{{currentValue}}}\", \"digest\": $[0].sha, \"releaseTimestamp\": $[0].commit.committer.date}], \"sourceUrl\": \"https://github.com/{{{packageName}}}\"} : {}"
+      ]
+    }
+  },
   "packageRules": [
     {
       "description": "Propose skill instruction changes weekly for manual review",
-      "matchDatasources": ["git-refs"],
+      "matchDatasources": ["custom.github-folder"],
       "schedule": ["* 0-3 * * 1"]
+    },
+    {
+      "description": "Link each update to the upstream commit comparison",
+      "matchDatasources": ["custom.github-folder"],
+      "matchUpdateTypes": ["digest"],
+      "changelogUrl": "{{sourceUrl}}/compare/{{currentDigest}}..{{newDigest}}"
     }
   ]
 }
