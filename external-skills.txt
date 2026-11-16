@@ -7,7 +7,7 @@
 https://github.com/anthropics/skills/tree/2c5958ecac7cee2b583967a2c4981d0f4a75c579 --skill frontend-design # ref=main
 https://github.com/cloudflare/skills/tree/cbf893b954222276bf1af57e5f23379231e0efb9 --skill cloudflare # ref=main
 https://github.com/doeixd/solid-skill/tree/d0b77a86435c9d6a180cc9e36112a8e5b850e4f3 --skill solid-js-1x-best-practices-and-api # ref=main
-https://github.com/github/gh-stack/tree/bd0a32504f9ae9f795875a9e6bb90ff7408fda08 --skill gh-stack # ref=main
+https://github.com/github/gh-stack/tree/80b6d6e910cc1b7eaa26b961d7721ade21084fed --skill gh-stack # ref=main
 https://github.com/humanlayer/skills/tree/4d69d20f6e9b57b4fcf0d501ccfb1be961f0f329 --skill show-me # ref=main
 https://github.com/khmm12/solidjs-v2-skills/tree/2533ed5c0149bdbad9b2a73bfeebaff12bdc8d11 # ref=main
 https://github.com/neondatabase/agent-skills/tree/2b0e2b6f56d2b41c5363049e30e6ab72aa260cce --skill neon neon-postgres # ref=main
