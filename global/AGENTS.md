@@ -131,7 +131,7 @@
   - Name each agent that worked on it, children you started included, with what it did: ``Written by `codex/gpt-6.1-sol`, reviewed by `claude/claude-opus-5-5`, in [styal 🧵](https://github.com/incognitojam/styal).`` Name an agent only when you know its label. When changing a body that already credits agents, keep them and add yourself.
   - Bodies put it after a `---` rule; comments and reviews end with it as a paragraph. Text the user wrote gets none.
 
-## Stacked pull requests
+## Pull request size and stacking
 
 - Make each pull request the smallest change that works on its own, even within a
   larger request or thread. Small pull requests are easier to review, merge sooner,
@@ -141,19 +141,15 @@
 - Stack only when a pull request builds on an earlier one that hasn't merged yet. Each
   layer must still work and ship without the layers above it. Unrelated changes stay
   separate, non-stacked pull requests.
-- Manage a stack exclusively with the `gh stack` extension
-  (`gh extension install github/gh-stack`), and read `gh stack --help` first where the
-  `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`, or manual
-  retargeting of a pull request corrupt the stack's dependent branches and its GitHub
-  metadata. If the extension is unavailable, report that instead of falling back to
-  plain git.
-- `gh stack submit` creates a pull request for each new layer, so it needs an explicit
-  request whenever it would open one; pushing updates to layers you already
-  own follows the ownership rule above. `gh stack merge` needs an explicit request
-  like any merge. Agent-facing documentation recommends `gh stack merge --yes`, which
-  suppresses the confirmation, and a merge scoped to one pull request still lands
-  every unmerged layer below it. Run `gh stack view --json` first and state exactly
-  which layers will land.
+- Manage a stack only with the `gh stack` extension, reading `gh stack --help` first
+  where the `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`,
+  or manual retargeting corrupt the stack's dependent branches and GitHub metadata.
+  If the extension is missing, install it with `gh extension install github/gh-stack`;
+  if you cannot, say so instead of falling back to plain git.
+- `gh stack submit` and `gh stack merge` need the same explicit request as opening
+  or merging any pull request, whatever the `gh-stack` skill suggests about `--yes`.
+  A merge scoped to one pull request also lands every unmerged layer below it: run
+  `gh stack view --json` first and state which layers will land.
 
 ## Delegating work
 
