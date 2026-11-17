@@ -102,10 +102,9 @@
   other than the default branch, after checking that the push discards only commits you
   mean to replace. Pin the lease to the commit you checked:
   `git push --force-with-lease=<branch>:<sha>`.
-- Merge a pull request only when the user explicitly asks and the target is
-  unambiguous. Respect repository merge policy and stop for failed required checks,
-  unresolved requested changes, conflicts, or other merge blockers unless the user
-  explicitly accepts the risk.
+- Before merging, be sure which pull request is meant. Respect repository merge
+  policy and stop for failed required checks, unresolved requested changes,
+  conflicts, or other merge blockers unless the user explicitly accepts the risk.
 - After attempting a merge, verify the pull request's state and resulting base-branch
   commit before reporting success or retrying an error. Check any CI triggered by that
   commit; when repository instructions say merging deploys the change, monitor and
