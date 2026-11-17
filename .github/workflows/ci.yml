@@ -13,8 +13,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect installer changes
+    runs-on: ubuntu-latest
+    outputs:
+      installers: ${{ steps.filter.outputs.installers }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+      - id: filter
+        name: Check whether installer inputs changed
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          # Pushes to main always run. A pull request runs unless it only changes files the
+          # installer test never reads. HEAD^1 is the base side of the pull request merge commit.
+          if [ "$EVENT" != pull_request ] ||
+            git diff --name-only HEAD^1 HEAD |
+            grep -qvE '^(README\.md|AGENTS\.md|CLAUDE\.md|renovate\.json|drafts/.*)$'; then
+            echo installers=true >> "$GITHUB_OUTPUT"
+          else
+            echo installers=false >> "$GITHUB_OUTPUT"
+          fi
+
   installers:
     name: Installers (${{ matrix.platform }})
+    needs: changes
+    if: needs.changes.outputs.installers == 'true'
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     strategy:
@@ -36,3 +62,18 @@ jobs:
         env:
           PYTHONUTF8: '1'
         run: python tests/installers.py
+
+  # The required check: passes when every platform passed or none needed to run.
+  installers-result:
+    name: Installers
+    needs: [changes, installers]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check installer results
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          INSTALLERS: ${{ needs.installers.result }}
+        run: |
+          echo "changes: $CHANGES, installers: $INSTALLERS"
+          [ "$CHANGES" = success ] && { [ "$INSTALLERS" = success ] || [ "$INSTALLERS" = skipped ]; }
