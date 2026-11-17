@@ -14,7 +14,7 @@ https://github.com/doeixd/solid-skill/tree/2d9189cd84d04bad87f8a6b81d14416b639f4
 https://github.com/github/gh-stack/tree/2a49e6751238633db504655d8a8eba3e433e827d --skill gh-stack # ref=main path=skills/gh-stack
 https://github.com/humanlayer/skills/tree/bba9d13ab34f0a87f1cc33df4dd196372393ddfc --skill show-me # ref=main path=plugins/show-me/skills/show-me
 https://github.com/khmm12/solidjs-v2-skills/tree/2533ed5c0149bdbad9b2a73bfeebaff12bdc8d11 # ref=main path=skills
-https://github.com/neondatabase/agent-skills/tree/2b0e2b6f56d2b41c5363049e30e6ab72aa260cce --skill neon # ref=main path=skills/neon
-https://github.com/neondatabase/agent-skills/tree/2b0e2b6f56d2b41c5363049e30e6ab72aa260cce --skill neon-postgres # ref=main path=skills/neon-postgres
+https://github.com/neondatabase/agent-skills/tree/a874fd709f0bcad54d085d442b7962470b53c234 --skill neon # ref=main path=skills/neon
+https://github.com/neondatabase/agent-skills/tree/a874fd709f0bcad54d085d442b7962470b53c234 --skill neon-postgres # ref=main path=skills/neon-postgres
 https://github.com/t3dotgg/tstack/tree/11e37a74d0a6868c121cd0910ab2b3bd9873b92a --skill council # ref=main path=skills/council
 https://github.com/t3dotgg/tstack/tree/6efae364201abc9d9f07443e9caa461f42e51090 --skill sol-loop # ref=main path=skills/sol-loop
