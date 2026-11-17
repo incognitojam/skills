@@ -10,9 +10,8 @@
   already public in the context being worked in — authors and emails in git history,
   participants on a public pull request or issue, an open-source codebase — needs no
   masking. Quote and reproduce it normally.
-- When capturing a screenshot or recording, prefer a view backed by public or
-  synthetic data. Only if the sole usable view exposes genuinely private data,
-  redact it or say what could not be captured.
+- For screenshots and recordings, prefer a view backed by public or synthetic data;
+  otherwise redact, or say what could not be captured.
 
 ## Scratch files
 
