@@ -35,14 +35,11 @@
 
 ## Verification and validation
 
-- For changes that affect runtime behavior, run the application or affected code
-  path and inspect its actual behavior. Exercise the changed flow and relevant
-  adjacent flows, check the observed results against expectations, and look for
-  runtime errors and unintended effects, including browser console and server
-  errors where applicable. Scale validation to the scope and risk of the change.
-- Automated tests count as behavioral validation when they exercise the relevant
-  behavior and check meaningful outcomes. A passing suite alone does not establish
-  that the changed flow works. Continue to run required automated checks.
+- For changes that affect runtime behavior, run the affected code path and check
+  what it actually does, including adjacent flows and runtime errors, in proportion
+  to the change's scope and risk. Automated tests count when they exercise the
+  changed behavior and check meaningful outcomes; a passing suite alone does not
+  establish that the changed flow works.
 - In pull requests and completion reports, describe the specific scenarios
   exercised, observed outcomes, and any behavior that could not be verified,
   including why. Do not list routine checks that passed, such as linting, type
