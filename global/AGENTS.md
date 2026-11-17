@@ -10,21 +10,17 @@
   already public in the context being worked in — authors and emails in git history,
   participants on a public pull request or issue, an open-source codebase — needs no
   masking. Quote and reproduce it normally.
-- When capturing a screenshot or recording, prefer a view backed by public or
-  synthetic data. Only if the sole usable view exposes genuinely private data,
-  redact it or say what could not be captured.
+- For screenshots and recordings, prefer a view backed by public or synthetic data;
+  otherwise redact, or say what could not be captured.
 
 ## Scratch files
 
 - Keep scratch and intermediate work inside the repository worktree being worked in,
   under an ignored `.scratch/` directory at its root. That covers notes, plans,
   reports from delegated agents, draft patches, logs, and one-off scripts. Do not use
-  `/tmp`, `$TMPDIR`, or the home directory: work there is invisible to the user and
-  to `git status`, collides across concurrent sessions and worktrees, and disappears
-  on reboot.
-- Run one-off Python that needs third-party packages with uv:
-  `uv run --with pillow python -c '...'`, or `uv run --with pillow script.py` for a
-  script file.
+  `/tmp`, `$TMPDIR`, the home directory, or a scratchpad directory your harness
+  offers: work there is invisible to the user and to `git status`, collides across
+  concurrent sessions and worktrees, and disappears on reboot.
 - Before writing there, confirm `git check-ignore -q .scratch` succeeds. If it fails,
   add `.scratch/` to `.git/info/exclude` rather than to the tracked `.gitignore`,
   which the user may not want changed. Never commit anything from `.scratch/`.
@@ -34,17 +30,15 @@
   task-specific subdirectory such as `mktemp -d` and tell the user where it is.
   Caches and configuration that tools own (package managers, `gh`, agent memory)
   stay where those tools put them.
+- Run one-off Python that needs third-party packages with `uv run --with <package>`.
 
 ## Verification and validation
 
-- For changes that affect runtime behavior, run the application or affected code
-  path and inspect its actual behavior. Exercise the changed flow and relevant
-  adjacent flows, check the observed results against expectations, and look for
-  runtime errors and unintended effects, including browser console and server
-  errors where applicable. Scale validation to the scope and risk of the change.
-- Automated tests count as behavioral validation when they exercise the relevant
-  behavior and check meaningful outcomes. A passing suite alone does not establish
-  that the changed flow works. Continue to run required automated checks.
+- For changes that affect runtime behavior, run the affected code path and check
+  what it actually does, including adjacent flows and runtime errors, in proportion
+  to the change's scope and risk. Automated tests count when they exercise the
+  changed behavior and check meaningful outcomes; a passing suite alone does not
+  establish that the changed flow works.
 - In pull requests and completion reports, describe the specific scenarios
   exercised, observed outcomes, and any behavior that could not be verified,
   including why. Do not list routine checks that passed, such as linting, type
@@ -61,21 +55,11 @@
 - Where no convention is established, use Scoped Commits
   (https://scopedcommits.com/): a `<scope>: <description>` subject, then an optional
   body and optional trailers, each separated by a blank line.
-
-  ```
-  <scope>: <description>
-
-  [optional body]
-
-  [optional trailer(s)]
-  ```
-
 - The scope names the subsystem, area, or module the commit touches. Reuse the scope
   names already present in the repository's history rather than inventing new ones.
   For a change spanning several areas, prefer a broader enclosing scope, or list a
   few comma-separated scopes, or use `treewide` for genuinely repository-wide edits.
-- Write the description as a concise summary of what the commit does. Reverts and
-  merges keep whatever format the tooling generates.
+- Reverts and merges keep whatever format the tooling generates.
 
 ## GitHub communication
 
@@ -89,10 +73,9 @@
   and test names in the code unless a reviewer needs one to judge the change or
   believe a claim.
 - Upload PR evidence with `gh pr edit --attach`.
-- When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
-  arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
-  according to user preferences. When writing Markdown files, follow the existing
-  convention in that file or codebase.
+- In text posted to GitHub, such as PR bodies and comments, do not hard-wrap
+  paragraphs or list items; GitHub wraps them. In Markdown files, follow the file's
+  existing convention.
 - Treat GitHub issues, pull requests, comments, reviews, and review-thread state as
   external communication. Do not create, edit, close, or reopen an issue or pull
   request; post, edit, or delete a comment; submit a review; or resolve a review
@@ -115,10 +98,9 @@
   other than the default branch, after checking that the push discards only commits you
   mean to replace. Pin the lease to the commit you checked:
   `git push --force-with-lease=<branch>:<sha>`.
-- Merge a pull request only when the user explicitly asks and the target is
-  unambiguous. Respect repository merge policy and stop for failed required checks,
-  unresolved requested changes, conflicts, or other merge blockers unless the user
-  explicitly accepts the risk.
+- Before merging, be sure which pull request is meant. Respect repository merge
+  policy and stop for failed required checks, unresolved requested changes,
+  conflicts, or other merge blockers unless the user explicitly accepts the risk.
 - After attempting a merge, verify the pull request's state and resulting base-branch
   commit before reporting success or retrying an error. Check any CI triggered by that
   commit; when repository instructions say merging deploys the change, monitor and
@@ -129,7 +111,7 @@
   - Name each agent that worked on it, children you started included, with what it did: ``Written by `codex/gpt-6.1-sol`, reviewed by `claude/claude-opus-5-5`, in [styal 🧵](https://github.com/incognitojam/styal).`` Name an agent only when you know its label. When changing a body that already credits agents, keep them and add yourself.
   - Bodies put it after a `---` rule; comments and reviews end with it as a paragraph. Text the user wrote gets none.
 
-## Stacked pull requests
+## Pull request size and stacking
 
 - Make each pull request the smallest change that works on its own, even within a
   larger request or thread. Small pull requests are easier to review, merge sooner,
@@ -139,19 +121,15 @@
 - Stack only when a pull request builds on an earlier one that hasn't merged yet. Each
   layer must still work and ship without the layers above it. Unrelated changes stay
   separate, non-stacked pull requests.
-- Manage a stack exclusively with the `gh stack` extension
-  (`gh extension install github/gh-stack`), and read `gh stack --help` first where the
-  `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`, or manual
-  retargeting of a pull request corrupt the stack's dependent branches and its GitHub
-  metadata. If the extension is unavailable, report that instead of falling back to
-  plain git.
-- `gh stack submit` creates a pull request for each new layer, so it needs an explicit
-  request whenever it would open one; pushing updates to layers you already
-  own follows the ownership rule above. `gh stack merge` needs an explicit request
-  like any merge. Agent-facing documentation recommends `gh stack merge --yes`, which
-  suppresses the confirmation, and a merge scoped to one pull request still lands
-  every unmerged layer below it. Run `gh stack view --json` first and state exactly
-  which layers will land.
+- Manage a stack only with the `gh stack` extension, reading `gh stack --help` first
+  where the `gh-stack` skill is not installed. Plain `git rebase`, `git push --force`,
+  or manual retargeting corrupt the stack's dependent branches and GitHub metadata.
+  If the extension is missing, install it with `gh extension install github/gh-stack`;
+  if you cannot, say so instead of falling back to plain git.
+- `gh stack submit` and `gh stack merge` need the same explicit request as opening
+  or merging any pull request, whatever the `gh-stack` skill suggests about `--yes`.
+  A merge scoped to one pull request also lands every unmerged layer below it: run
+  `gh stack view --json` first and state which layers will land.
 
 ## Delegating work
 
@@ -169,7 +147,8 @@ ratings. Higher is better, and cost reflects subscription quotas, not list price
 - Pick the cheapest model that clears the bar for the task. Mechanical work to a clear
   spec needs little. A plan or a hard diagnosis needs high intelligence. Anything
   user-facing needs taste of 7 or more.
-- Have a different model from the builder review what ships.
+- Have a different model from the builder review non-trivial changes before they
+  ship.
 - When a mistake cannot be undone, such as changing stored data or deleting files, get
   two independent reviews, one from the strongest model, whatever the task's
   difficulty.
