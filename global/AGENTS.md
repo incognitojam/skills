@@ -78,10 +78,9 @@
   its behavior before and after, or an annotated call path when a bug's cause sits
   a few calls away from where it shows up.
 - Upload PR evidence with `gh pr edit --attach`.
-- When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
-  arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
-  according to user preferences. When writing Markdown files, follow the existing
-  convention in that file or codebase.
+- In text posted to GitHub, such as PR bodies and comments, do not hard-wrap
+  paragraphs or list items; GitHub wraps them. In Markdown files, follow the file's
+  existing convention.
 - Treat GitHub issues, pull requests, comments, reviews, and review-thread state as
   external communication. Do not create, edit, close, or reopen an issue or pull
   request; post, edit, or delete a comment; submit a review; or resolve a review
