@@ -106,7 +106,7 @@
   commit; when repository instructions say merging deploys the change, monitor and
   perform the documented verification. Ask before reverting, fixing forward, or
   triggering a manual deployment.
-- When publishing text you wrote through the user's GitHub account, end it with one sentence crediting the agents: ``Written by `<label>` in [styal 🧵](https://github.com/incognitojam/styal).`` It replaces your harness's own attribution line, such as "🤖 Generated with Claude Code". Keep ` in [styal 🧵](…)` only when a styal runtime note says you run in styal; otherwise end after the label.
+- When publishing text you wrote through the user's GitHub account, end it with one sentence crediting the agents: ``Written by `<label>` in [styal 🧵](https://github.com/incognitojam/styal).`` It replaces your harness's own attribution line, such as "🤖 Generated with Claude Code". Keep ` in [styal 🧵](…)` only in a pull request body, and only when a styal runtime note says you run in styal; otherwise end after the label.
   - A label is `<harness>/<model id>`: the harness's command name (`claude`, `codex`, `opencode`, `pi`, `cursor`) and the model id exactly as your harness reports it, such as `codex/gpt-6.1-sol`.
   - Name each agent that worked on it, children you started included, with what it did: ``Written by `codex/gpt-6.1-sol`, reviewed by `claude/claude-opus-5-5`, in [styal 🧵](https://github.com/incognitojam/styal).`` Name an agent only when you know its label. When changing a body that already credits agents, keep them and add yourself.
   - Bodies put it after a `---` rule; comments and reviews end with it as a paragraph. Text the user wrote gets none.
