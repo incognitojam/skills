@@ -79,18 +79,15 @@
 
 ## GitHub communication
 
-- PR descriptions should justify the final change: explain the problem, resulting
-  behavior, and relevant validation. Omit intermediate PR states and problems
-  encountered during development unless they help reviewers understand or assess
-  the final change. Update the description when scope changes so it reflects the
-  final result.
-- Write the description so a reviewer can decide from its first screen: the problem
-  in a sentence or two, then what happens now. Show the concrete thing rather than
-  describing it: the message someone sees, the value or line of code that changed, a
-  screenshot, or an annotated call path when a bug's cause sits a few calls from
-  where it shows up. Use a list or table only for several situations; one situation
-  is a sentence. Leave constants, limits, and field, function, and test names in the
-  code unless a reviewer needs one to judge the change or believe a claim.
+- A PR description justifies the final change so a reviewer can decide from its
+  first screen: the problem, what happens now, and how it was validated, at a length
+  that fits the change. Leave out intermediate states and development history, and
+  update it when scope changes.
+- Where there is something concrete to show, such as the message someone now sees
+  or the line that changed, show it instead of describing it. Use a list or table
+  only to compare several situations. Leave constants, limits, and field, function,
+  and test names in the code unless a reviewer needs one to judge the change or
+  believe a claim.
 - Upload PR evidence with `gh pr edit --attach`.
 - When writing Markdown prose in GitHub pull requests or elsewhere, do not insert
   arbitrary newlines in paragraphs or list items. GitHub and editors wrap text
