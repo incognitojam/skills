@@ -19,12 +19,9 @@
 - Keep scratch and intermediate work inside the repository worktree being worked in,
   under an ignored `.scratch/` directory at its root. That covers notes, plans,
   reports from delegated agents, draft patches, logs, and one-off scripts. Do not use
-  `/tmp`, `$TMPDIR`, or the home directory: work there is invisible to the user and
-  to `git status`, collides across concurrent sessions and worktrees, and disappears
-  on reboot.
-- Run one-off Python that needs third-party packages with uv:
-  `uv run --with pillow python -c '...'`, or `uv run --with pillow script.py` for a
-  script file.
+  `/tmp`, `$TMPDIR`, the home directory, or a scratchpad directory your harness
+  offers: work there is invisible to the user and to `git status`, collides across
+  concurrent sessions and worktrees, and disappears on reboot.
 - Before writing there, confirm `git check-ignore -q .scratch` succeeds. If it fails,
   add `.scratch/` to `.git/info/exclude` rather than to the tracked `.gitignore`,
   which the user may not want changed. Never commit anything from `.scratch/`.
@@ -34,6 +31,7 @@
   task-specific subdirectory such as `mktemp -d` and tell the user where it is.
   Caches and configuration that tools own (package managers, `gh`, agent memory)
   stay where those tools put them.
+- Run one-off Python that needs third-party packages with `uv run --with <package>`.
 
 ## Verification and validation
 
