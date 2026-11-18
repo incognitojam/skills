@@ -36,6 +36,17 @@
   stay where those tools put them.
 - Run one-off Python that needs third-party packages with `uv run --with <package>`.
 
+## Simplicity
+
+- Write the smallest thing that does the job. Before adding a helper, an
+  abstraction, or a script, check whether a few inline lines would do, and prefer
+  them when they would.
+- When borrowing from another project or an earlier version, take the mechanism and
+  leave the ceremony: progress output, option parsing, and fallbacks the task did
+  not ask for.
+- When a change replaces something, remove what it replaces instead of layering the
+  new code on top.
+
 ## Verification and validation
 
 - For changes that affect runtime behavior, run the affected code path and check
