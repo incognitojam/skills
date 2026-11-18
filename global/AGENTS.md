@@ -97,6 +97,9 @@
 - Monitor a pull request you own after opening it or pushing to it, using the
   harness's watch tool if it has one, and handle the checks and review feedback that
   come in.
+- To read why a check failed, use `gh run view <run-id> --log-failed`. It works only
+  once the whole run has finished; for a finished job in a run that is still going,
+  use `gh api repos/<owner>/<repo>/actions/jobs/<job-id>/logs --allow-escape-sequences`.
 - You also own a branch you created for the task or were asked to work on, and
   the branch of a pull request you own. You may rewrite and force push an owned branch
   other than the default branch, after checking that the push discards only commits you
