@@ -45,9 +45,11 @@
   establish that the changed flow works.
 - In pull requests and completion reports, describe the specific scenarios
   exercised, observed outcomes, and any behavior that could not be verified,
-  including why. Do not list routine checks that passed, such as linting, type
-  checks, or existing test suites: CI already reports them and they add noise.
-  Mention a check only when it is itself the validation for the change, such as
+  including why.
+- Leave routine checks that passed out of both, your final message included: no
+  "all checks passed", test counts, or "lint is clean" for linting, type checks, or
+  existing test suites. CI already reports them and they add noise. Mention a check
+  only when it is itself the validation for the change, such as
   for changes without runtime effects, or when it failed.
 
 ## Commit messages
