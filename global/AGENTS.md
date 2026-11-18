@@ -21,11 +21,15 @@
   `/tmp`, `$TMPDIR`, the home directory, or a scratchpad directory your harness
   offers: work there is invisible to the user and to `git status`, collides across
   concurrent sessions and worktrees, and disappears on reboot.
-- Before writing there, confirm `git check-ignore -q .scratch` succeeds. If it fails,
-  add `.scratch/` to `.git/info/exclude` rather than to the tracked `.gitignore`,
-  which the user may not want changed. Never commit anything from `.scratch/`.
+- Before writing there, run `mkdir -p .scratch` and then confirm
+  `git check-ignore -q .scratch` succeeds; the check fails for a directory that does
+  not exist yet, even when it is ignored. If it fails, add `.scratch/` to
+  `.git/info/exclude` rather than to the tracked `.gitignore`, which the user may
+  not want changed. Never commit anything from `.scratch/`.
 - Name files by task, `.scratch/<task-slug>-<purpose>.<ext>`, so concurrent sessions
-  in the same worktree do not overwrite one another.
+  in the same worktree do not overwrite one another. Put every such file inside the
+  directory, not beside it as `.scratch-<name>` at the repository root. A probe that
+  has to sit in a source directory to work is removed before you finish.
 - Outside a repository, or when a tool insists on a temporary path, use a
   task-specific subdirectory such as `mktemp -d` and tell the user where it is.
   Caches and configuration that tools own (package managers, `gh`, agent memory)
