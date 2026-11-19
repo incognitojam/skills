@@ -60,7 +60,7 @@ for (const [name, entry] of Object.entries(readLock())) {
     }
     // Remove for all agents: several agents share the canonical directory with Codex.
     const result = spawnSync(process.platform === 'win32' ? 'npx.cmd' : 'npx', [
-        '--yes', 'skills@1.8.1', 'remove', name, '--global', '--yes',
+        '--yes', 'skills@1.9.0', 'remove', name, '--global', '--yes',
     ], { encoding: 'utf8', shell: process.platform === 'win32' });
     if (result.error || result.status !== 0) {
         throw new Error(`Failed to remove ${name}: ${result.error ?? result.stdout + result.stderr}`);
