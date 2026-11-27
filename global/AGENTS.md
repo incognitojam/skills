@@ -119,10 +119,11 @@
   where (trimmed to the frames that matter), before and after screenshots of a
   visible change (same size, same data), or a small Mermaid diagram of a flow
   between several parts or a set of states the change alters. Leave each out when a
-  sentence says the same thing. Attach images with `gh pr edit --attach` rather than
-  committing them. Use a list or table only to compare several situations. Leave
-  constants, limits, and field, function, and test names in the code unless a
-  reviewer needs one to judge the change or believe a claim.
+  sentence says the same thing, and when you keep one, cut the prose it replaces.
+  Attach images with `gh pr edit --attach` rather than committing them. Use a list
+  or table only to compare several situations. Leave constants, limits, and field,
+  function, and test names in the code unless a reviewer needs one to judge the
+  change or believe a claim.
 - In text posted to GitHub, such as PR bodies and comments, do not hard-wrap
   paragraphs or list items; GitHub wraps them. In Markdown files, follow the file's
   existing convention.
