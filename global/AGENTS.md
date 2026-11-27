@@ -114,12 +114,15 @@
   first screen: the problem, what happens now, and how it was validated, at a length
   that fits the change. Leave out intermediate states and development history, and
   update it when scope changes.
-- Where there is something concrete to show, such as the message someone now sees
-  or the line that changed, show it instead of describing it. Use a list or table
-  only to compare several situations. Leave constants, limits, and field, function,
-  and test names in the code unless a reviewer needs one to judge the change or
-  believe a claim.
-- Upload PR evidence with `gh pr edit --attach`.
+- Where there is something concrete to show, show it instead of describing it: the
+  message someone now sees, the line that changed, the error a bug produced and
+  where (trimmed to the frames that matter), before and after screenshots of a
+  visible change (same size, same data), or a small Mermaid diagram of a flow
+  between several parts or a set of states the change alters. Leave each out when a
+  sentence says the same thing. Attach images with `gh pr edit --attach` rather than
+  committing them. Use a list or table only to compare several situations. Leave
+  constants, limits, and field, function, and test names in the code unless a
+  reviewer needs one to judge the change or believe a claim.
 - In text posted to GitHub, such as PR bodies and comments, do not hard-wrap
   paragraphs or list items; GitHub wraps them. In Markdown files, follow the file's
   existing convention.
